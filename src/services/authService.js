@@ -1,98 +1,96 @@
-const TOKEN_KEY = 'auth_token';
-const USER_KEY = 'auth_user';
-const API_URL = 'http://localhost:9090/api';
+const TOKEN_KEY = "auth_token";
+const USER_KEY = "auth_user";
+const API_URL = "http://localhost:9090/api";
 
 export const authService = {
+  login: async (username, password) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    login: async (username, password) => {
-        try {
-            const response = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    password
-                })
-            });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Invalid credentials");
+      }
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Invalid credentials');
-            }
+      const data = await response.json();
+      localStorage.setItem(TOKEN_KEY, data.token);
+      localStorage.setItem(USER_KEY, JSON.stringify(data));
 
-            const data = await response.json();
-            localStorage.setItem(TOKEN_KEY, data.token);
-            localStorage.setItem(USER_KEY, JSON.stringify(data));
-
-            return data;
-        } catch (error) {
-            throw new Error(error.message || 'Login failed. Please try again.');
-        }
-    },
-
-    logout: (isWindowClosing = false) => {
-        try {
-            const token = localStorage.getItem(TOKEN_KEY);
-            if (!token) return true;
-
-            const logoutEndpoint = `${API_URL}/auth/logout`;
-
-            if (isWindowClosing) {
-                // Synchronous logout for window closing
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', logoutEndpoint, false); // false makes it synchronous
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send();
-            } else {
-                // Asynchronous logout for normal logout
-                fetch(logoutEndpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-            }
-
-            // Always clear local storage
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem(USER_KEY);
-            return true;
-        } catch (error) {
-            console.error('Logout error:', error);
-            // Still remove items from localStorage even if the API call fails
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem(USER_KEY);
-            return true;
-        }
-    },
-
-    hasRole: (user, role) => {
-        return user?.roles?.includes(role) || false;
-    },
-
-    isAdmin: (user) => {
-        return authService.hasRole(user, 'ROLE_ADMIN');
-    },
-
-    getCurrentUser: () => {
-        const userStr = localStorage.getItem(USER_KEY);
-        return userStr ? JSON.parse(userStr) : null;
-    },
-
-    getToken: () => {
-        return localStorage.getItem(TOKEN_KEY);
-    },
-
-    isAuthenticated: () => {
-        return !!localStorage.getItem(TOKEN_KEY);
+      return data;
+    } catch (error) {
+      throw new Error(error.message || "Login failed. Please try again.");
     }
+  },
 
+  logout: (isWindowClosing = false) => {
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) return true;
 
-    /*
+      const logoutEndpoint = `${API_URL}/auth/logout`;
+
+      if (isWindowClosing) {
+        // Synchronous logout for window closing
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", logoutEndpoint, false); // false makes it synchronous
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send();
+      } else {
+        // Asynchronous logout for normal logout
+        fetch(logoutEndpoint, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      }
+
+      // Always clear local storage
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      return true;
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still remove items from localStorage even if the API call fails
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      return true;
+    }
+  },
+
+  hasRole: (user, role) => {
+    return user?.roles?.includes(role) || false;
+  },
+
+  isAdmin: (user) => {
+    return authService.hasRole(user, "ROLE_ADMIN");
+  },
+
+  getCurrentUser: () => {
+    const userStr = localStorage.getItem(USER_KEY);
+    return userStr ? JSON.parse(userStr) : null;
+  },
+
+  getToken: () => {
+    return localStorage.getItem(TOKEN_KEY);
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem(TOKEN_KEY);
+  },
+
+  /*
     login: async (email, password) => {
         // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 1000));
