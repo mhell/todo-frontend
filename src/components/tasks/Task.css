@@ -67,6 +67,12 @@
     margin-bottom: 0.25rem;
   }
 
+  .form-control::file-selector-button {
+    margin: -0.5rem -0.75rem; /* compensate for input padding */
+    padding: 0.5rem 0.75rem;
+    margin-inline-end: 0.75rem;
+  }
+
   /* List Styles */
   .tasks-list {
     padding: 1rem;
