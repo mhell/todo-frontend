@@ -38,7 +38,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="col-12 col-md-8 login-form-container">
+    <div id="login-form" className="col-12 col-md-8 login-form-container">
       <div className="login-form-wrapper">
         <div className="mobile-brand d-md-none">
           <i className="bi bi-card-checklist"></i>

@@ -139,7 +139,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-layout">
+    <div id="dashboard" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
         <Header

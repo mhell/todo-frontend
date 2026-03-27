@@ -1,3 +1,4 @@
+import "./Task.css";
 
 const Form = () => {
   return (
