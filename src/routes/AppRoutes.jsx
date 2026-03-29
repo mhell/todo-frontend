@@ -25,7 +25,7 @@ const AppRoutes = () => {
       )}
 
       {/* Tasks route - for both admin and user */}
-      <Route path="/dashboard/tasks" element={
+      <Route key="task" path="/dashboard/tasks" element={
           <RoleProtectedRoute requiredRoles={["ROLE_USER", "ROLE_ADMIN"]}>
             <Task />
           </RoleProtectedRoute>

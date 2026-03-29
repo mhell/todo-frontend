@@ -90,13 +90,13 @@
   }
 
   /* Buttons */
-  /* .btn {
+    .btn {
     border-radius: 4px;
     font-size: 0.9rem;
     font-weight: 600;
-    padding: 0.5rem 0.75rem;
+    /* padding: 0.5rem 0.75rem; */
     transition: all 0.3s ease;
-  } */
+  }
 
   /* File Attachments */
   .file-list {
