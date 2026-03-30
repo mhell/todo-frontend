@@ -1,31 +1,30 @@
 import "./Task.css";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toLocalISOString } from "../../utils/converters"
 
-const Form = ({onNewTask, editTask}) => {
-  const defaultValues = {
-    ...editTask,
-    dueDate: editTask && toLocalISOString(editTask.dueDate)
-  };
-  const { control, register, reset, resetField, handleSubmit, formState: { errors } } = useForm({defaultValues: defaultValues});
-  const attachments = useWatch({control,  name: "attachments"});
-  const attachmentArray = useMemo(() => Array.from(attachments || editTask?.attachments || [] ), [attachments]);
+const Form = ({header, onSave, onCancel, editTask}) => {
+  const defaultValues = {...editTask, dueDate: editTask && toLocalISOString(editTask.dueDate)};
+  const { control, register, reset, setValue, handleSubmit, formState: { errors } } = useForm({defaultValues: defaultValues});
+  const attachments = useWatch({control, name: "attachments", defaultValue: editTask?.attachments || []});
+  console.log(attachments);
+  const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
 
   const onSubmit = (data) => {
-    const newTask = {title: data.title, description: data.description, dueDate: new Date(data.dueDate), personId: Number(data.assignee) || null, attachments: attachmentArray};
-    onNewTask(editTodo ? Object.assign(editTodo, newTask) : newTask);
+    const newTask = {title: data.title, description: data.description, dueDate: new Date(data.dueDate), personId: Number(data.assignee) || null, attachments: attachments};
+    onSave(editTask ? Object.assign(editTask, newTask) : newTask);
     clearAttachments();
     reset();
   }
 
   const clearAttachments = () => {
-    resetField("attachments");
+    setValue("attachments", [])
   }
 
   return (
     <div className="card shadow-sm task-form-section">
       <div className="card-body">
-        <h2 className="card-title mb-4">Add New Task</h2>
+        {header && <h2 className="card-title mb-4">{header}</h2>}
         <form id="todoForm" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label htmlFor="todoTitle" className="form-label">
@@ -49,14 +48,23 @@ const Form = ({onNewTask, editTask}) => {
                 Due Date
               </label>
               <input type="datetime-local" className="form-control" id="todoDueDate" 
-              {...register("dueDate", {required: "Due date needs to be set", min: {value: new Date().toISOString().substring(0, 16), message: 'Due date cannot be set in the past'}})} />
+              {...register("dueDate", {
+                required: "Due date needs to be set", 
+                validate: (value) => {
+                  const minDate = toLocalISOString(new Date()).substring(0, 16);
+                  const currentDueDate = toLocalISOString(editTask?.dueDate).substring(0, 16);
+                  if (value > minDate) return true;
+                  if (editTask && value.substring(0, 16) === currentDueDate) return true;
+                  return "Due date cannot be set in the past";
+                },
+              })} />
               <div className="invalid-feedback d-block">{errors.dueDate?.message}</div>
             </div>
             <div className="col-md-6 mb-3">
               <label htmlFor="todoPerson" className="form-label">
                 Assign to Person
               </label>
-              <select className="form-select" id="todoPerson" {...register("assignee")}>
+              <select className="form-select" id="todoPerson" {...register("personId")}>
                 <option value="">-- Select Person (Optional) --</option>
                 <option value="1">Mehrdad Javan</option>
                 <option value="2">Simon Elbrink</option>
@@ -64,7 +72,7 @@ const Form = ({onNewTask, editTask}) => {
             </div>
           </div>
           <div className="mb-3">
-            <label className="form-label">Attachments</label>
+            <label htmlFor="todoAttachments" className="form-label">Attachments</label>
             <div className="input-group mb-3">
               <input type="file" className="form-control" id="todoAttachments" multiple {...register("attachments")} />
               <button className="btn btn-outline-secondary" type="button" onClick={clearAttachments}>
@@ -73,9 +81,9 @@ const Form = ({onNewTask, editTask}) => {
             </div>
             <div className="file-list" id="attachmentPreview">
               {
-                attachmentArray.map((attachment, index) => (
+                attachmentNames.map((attachmentname, index) => (
                   <li key={index} className="list-group-item border-0 bi bi-file-earmark">
-                    <span className="ms-1">{attachment.name}</span>
+                    <span className="ms-1">{attachmentname}</span>
                   </li>
                 ))
               }
@@ -84,7 +92,7 @@ const Form = ({onNewTask, editTask}) => {
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             {
               editTask &&
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={onCancel}>
                 Cancel
               </button>
             }

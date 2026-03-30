@@ -121,6 +121,16 @@
     margin-bottom: 0.5rem;
   }
 
+  /* Edit Modal */
+  .modal-body .task-form-section {
+    margin-bottom: 0;
+    box-shadow: none;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--border-color);
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .dashboard-main {

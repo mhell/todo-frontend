@@ -1,4 +1,4 @@
-import { toLocalISOString } from "../../utils/formatters"
+import { toLocalISOString } from "../../utils/converters"
 
 const STATUSES = {
   completed: { class: "text-bg-success", message: "completed" },
@@ -7,10 +7,10 @@ const STATUSES = {
   inProgress: { class: "text-bg-primary", message: "in-progress" },
 };
 
-const TaskListItem = ({ task, onComplete, onEdit, onDelete }) => {
+const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
   const status = task.completed ? STATUSES.completed
                 : !task.dueDate ? STATUSES.pending
-                : task.dueDate < Date.now() ? STATUSES.overdue
+                : task.dueDate.getTime() < Date.now() ? STATUSES.overdue
                 : STATUSES.inProgress;
 
   return (
@@ -44,13 +44,17 @@ const TaskListItem = ({ task, onComplete, onEdit, onDelete }) => {
           </div>
         </div>
         <div className="btn-group mt-3 mt-md-0">
-          <button className="btn btn-outline-success btn-sm" title="Complete" onClick={onComplete}>
+          <button className="btn btn-outline-success btn-sm" title="Complete" 
+            onClick={() => {
+              task.completed = !task.completed;
+              onComplete(task);
+            }}>
             <i className="bi bi-check-lg"></i>
           </button>
-          <button className="btn btn-outline-primary btn-sm" title="Edit" onClick={onEdit}>
+          <button className="btn btn-outline-primary btn-sm" title="Edit" onClick={() => onEdit(task)}>
             <i className="bi bi-pencil"></i>
           </button>
-          <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={onDelete}>
+          <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onDelete(task)}>
             <i className="bi bi-trash"></i>
           </button>
         </div>
