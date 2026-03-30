@@ -1,35 +1,62 @@
 import "./Task.css";
+import React, { useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
-const Form = () => {
+const Form = ({onNewTask, editTask}) => {
+  const defaultValues = {
+    ...editTask,
+    dueDate: editTask && toLocalISOString(editTask.dueDate)
+  };
+  const { control, register, reset, resetField, handleSubmit, formState: { errors } } = useForm({defaultValues: defaultValues});
+  const attachments = useWatch({control,  name: "attachments"});
+  const attachmentArray = useMemo(() => Array.from(attachments || editTask?.attachments || [] ), [attachments]);
+
+  const onSubmit = (data) => {
+    const newTask = {title: data.title, description: data.description, dueDate: new Date(data.dueDate), personId: Number(data.assignee) || null, attachments: attachmentArray};
+    onNewTask(editTodo ? Object.assign(editTodo, newTask) : newTask);
+    clearAttachments();
+    reset();
+  }
+
+  const clearAttachments = () => {
+    resetField("attachments");
+  }
+
   return (
     <div className="card shadow-sm task-form-section">
       <div className="card-body">
         <h2 className="card-title mb-4">Add New Task</h2>
-        <form id="todoForm">
+        <form id="todoForm" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label htmlFor="todoTitle" className="form-label">
               Title
             </label>
-            <input type="text" className="form-control" id="todoTitle" required />
+            <input type="text" className="form-control" id="todoTitle" 
+            {...register("title", {required: "Title is required", maxLength: {value: 100, message: "Title needs to be less than 100 characters"}})} />
+            <div className="invalid-feedback d-block">{errors.title?.message}</div>
           </div>
           <div className="mb-3">
             <label htmlFor="todoDescription" className="form-label">
               Description
             </label>
-            <textarea className="form-control" id="todoDescription" rows="3"></textarea>
+            <textarea className="form-control" id="todoDescription" rows="3"
+            {...register("description", {required: "Description is required", maxLength: {value: 100, message: "Description needs to be less than 500 characters"}})}></textarea>
+            <div className="invalid-feedback d-block">{errors.description?.message}</div>
           </div>
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="todoDueDate" className="form-label">
                 Due Date
               </label>
-              <input type="datetime-local" className="form-control" id="todoDueDate" />
+              <input type="datetime-local" className="form-control" id="todoDueDate" 
+              {...register("dueDate", {required: "Due date needs to be set", min: {value: new Date().toISOString().substring(0, 16), message: 'Due date cannot be set in the past'}})} />
+              <div className="invalid-feedback d-block">{errors.dueDate?.message}</div>
             </div>
             <div className="col-md-6 mb-3">
               <label htmlFor="todoPerson" className="form-label">
                 Assign to Person
               </label>
-              <select className="form-select" id="todoPerson">
+              <select className="form-select" id="todoPerson" {...register("assignee")}>
                 <option value="">-- Select Person (Optional) --</option>
                 <option value="1">Mehrdad Javan</option>
                 <option value="2">Simon Elbrink</option>
@@ -39,17 +66,30 @@ const Form = () => {
           <div className="mb-3">
             <label className="form-label">Attachments</label>
             <div className="input-group mb-3">
-              <input type="file" className="form-control" id="todoAttachments" multiple />
-              <button className="btn btn-outline-secondary" type="button">
+              <input type="file" className="form-control" id="todoAttachments" multiple {...register("attachments")} />
+              <button className="btn btn-outline-secondary" type="button" onClick={clearAttachments}>
                 <i className="bi bi-x-lg"></i>
               </button>
             </div>
-            <div className="file-list" id="attachmentPreview"></div>
+            <div className="file-list" id="attachmentPreview">
+              {
+                attachmentArray.map((attachment, index) => (
+                  <li key={index} className="list-group-item border-0 bi bi-file-earmark">
+                    <span className="ms-1">{attachment.name}</span>
+                  </li>
+                ))
+              }
+            </div>
           </div>
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+            {
+              editTask &&
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+            }
             <button type="submit" className="btn btn-primary">
-              <i className="bi bi-plus-lg me-2"></i>
-              Add Task
+              { editTask ? "Save Changes" : <><i className='bi bi-plus-lg me-2'></i> Add Task</>}
             </button>
           </div>
         </form>

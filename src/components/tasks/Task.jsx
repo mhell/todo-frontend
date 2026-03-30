@@ -30,6 +30,17 @@ const Task = () => {
     setisFiltered(!isFiltered);
   }
 
+  const tmpTask = {
+    title: "Complete Project Documentation", 
+    description: "Write comprehensive documentation for the new features", 
+    completed: false,
+    dueDate: new Date("2025-08-15"),
+    createdAt: new Date("2025-08-07"),
+    personId: "Mehrdad Javan",
+    numberOfAttachment: 2,
+    attachments: [{}, {}]
+  }
+
   return (
     <div id="task" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
@@ -38,9 +49,9 @@ const Task = () => {
         <div className="container-lg dashboard-content">
           <div className="row">
             <div className="col-lg-11 col-xl-10 mx-auto">
-              <Form onNew={handleNewTask} />
-              <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter}>
-                <TaskListItem onComplete={handleUpdateTask} onEdit={(editTask) => setEditTask(editTask)} onDelete={handleDeleteTask} />
+              <Form onNewTask={handleNewTask} />
+              <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSidebarOpen} isFilterd={isFiltered}>
+                <TaskListItem task={tmpTask} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
               </TaskList>
             </div>
           </div>
