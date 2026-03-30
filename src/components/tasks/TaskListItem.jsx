@@ -44,7 +44,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
           </div>
         </div>
         <div className="btn-group mt-3 mt-md-0">
-          <button className="btn btn-outline-success btn-sm" title="Complete" 
+          <button className={`btn btn-outline-success btn-sm ${task.completed && "text-bg-success"}`} title="Complete" 
             onClick={() => {
               task.completed = !task.completed;
               onComplete(task);
