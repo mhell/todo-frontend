@@ -1,4 +1,5 @@
 import { toLocalISOString } from "../../utils/converters"
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const STATUSES = {
   completed: { class: "text-bg-success", message: "completed" },
@@ -8,6 +9,8 @@ const STATUSES = {
 };
 
 const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
+  const { isAdmin } = useAuth();
+  console.log(isAdmin);
   const status = task.completed ? STATUSES.completed
                 : !task.dueDate ? STATUSES.pending
                 : task.dueDate.getTime() < Date.now() ? STATUSES.overdue
@@ -54,9 +57,11 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
           <button className="btn btn-outline-primary btn-sm" title="Edit" onClick={() => onEdit(task)}>
             <i className="bi bi-pencil"></i>
           </button>
-          <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onDelete(task)}>
-            <i className="bi bi-trash"></i>
-          </button>
+          {isAdmin() &&
+            <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onDelete(task)}>
+              <i className="bi bi-trash"></i>
+            </button>
+          }
         </div>
       </div>
     </div>
