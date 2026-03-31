@@ -92,7 +92,7 @@ const Form = ({header, onSave, onCancel, editTask}) => {
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             {
               editTask &&
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={onCancel}>
+              <button type="button" className="btn btn-secondary" onClick={onCancel}>
                 Cancel
               </button>
             }
