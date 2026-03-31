@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Task.css";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../header/Header.jsx";
@@ -7,14 +7,19 @@ import Edit from "./Edit.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskListItem from "./TaskListItem.jsx";
 import useSessionState from "../../hooks/useSessionState.js";
+import { useTasks } from "../../context/TasksContext.jsx";
 
 const Task = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSorted, setIsSorted] = useSessionState("isTasksSorted", false);
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
+  const {tasks} = useTasks();
+
+  tasks && console.log(tasks);
 
   const handleNewTask = (task) => {
+    console.log(task);
   }
 
   const handleUpdateTask = (task) => {
@@ -35,29 +40,6 @@ const Task = () => {
     setEditTask(null);
   }
 
-  const tmpTask = {
-    id: 1,
-    title: "Complete Project Documentation", 
-    description: "Write comprehensive documentation for the new features", 
-    completed: false,
-    dueDate: new Date("2025-08-15T00:00:00"),
-    createdAt: new Date("2025-08-07T00:00:00"),
-    personId: 1,
-    numberOfAttachment: 2,
-    attachments: [{fileName: "file01"}, {fileName: "file01"}]
-  }
-  const tmpTask2 = {
-    id: 2,
-    title: "!!!!!!", 
-    description: "Write comprehensive documentation for the new features", 
-    completed: true,
-    dueDate: new Date("2025-08-15T00:00:00"),
-    createdAt: new Date("2025-08-07T00:00:00"),
-    personId: 1,
-    numberOfAttachment: 2,
-    attachments: [{fileName: "file01"}, {fileName: "file01"}]
-  }
-
   return (
     <div id="task" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
@@ -68,8 +50,11 @@ const Task = () => {
             <div className="col-lg-11 col-xl-10 mx-auto">
               <Form header="Add New Task" onSave={handleNewTask} />
               <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSorted} isFiltered={isFiltered}>
-                <TaskListItem task={tmpTask} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
-                <TaskListItem task={tmpTask2} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
+                {
+                  tasks?.map((task) => (
+                    <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
+                  ))
+                }
               </TaskList>
               <Edit header="Edit Task" isOpen={editTask} onCancel={handleCancel}>
                 { editTask && 

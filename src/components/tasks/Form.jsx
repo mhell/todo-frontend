@@ -4,15 +4,14 @@ import { useForm, useWatch } from "react-hook-form";
 import { toLocalISOString } from "../../utils/converters"
 
 const Form = ({header, onSave, onCancel, editTask}) => {
-  const defaultValues = {...editTask, dueDate: editTask && toLocalISOString(editTask.dueDate)};
+  const defaultValues = {...editTask, dueDate: editTask && editTask.dueDate.substring(0, 16)};
   const { control, register, reset, setValue, handleSubmit, formState: { errors } } = useForm({defaultValues: defaultValues});
   const attachments = useWatch({control, name: "attachments", defaultValue: editTask?.attachments || []});
-  console.log(attachments);
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
 
   const onSubmit = (data) => {
-    const newTask = {title: data.title, description: data.description, dueDate: new Date(data.dueDate), personId: Number(data.assignee) || null, attachments: attachments};
-    onSave(editTask ? Object.assign(editTask, newTask) : newTask);
+    console.log(data);
+    onSave(editTask ? Object.assign(editTask, data) : data);
     clearAttachments();
     reset();
   }
@@ -52,7 +51,7 @@ const Form = ({header, onSave, onCancel, editTask}) => {
                 required: "Due date needs to be set", 
                 validate: (value) => {
                   const minDate = toLocalISOString(new Date()).substring(0, 16);
-                  const currentDueDate = toLocalISOString(editTask?.dueDate).substring(0, 16);
+                  const currentDueDate = editTask?.dueDate.substring(0, 16);
                   if (value > minDate) return true;
                   if (editTask && value.substring(0, 16) === currentDueDate) return true;
                   return "Due date cannot be set in the past";

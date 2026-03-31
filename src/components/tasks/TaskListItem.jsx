@@ -10,10 +10,9 @@ const STATUSES = {
 
 const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
   const { isAdmin } = useAuth();
-  console.log(isAdmin);
   const status = task.completed ? STATUSES.completed
                 : !task.dueDate ? STATUSES.pending
-                : task.dueDate.getTime() < Date.now() ? STATUSES.overdue
+                : Date.parse(task.dueDate) < Date.now() ? STATUSES.overdue
                 : STATUSES.inProgress;
 
   return (
@@ -22,12 +21,12 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
         <div className="flex-grow-1">
           <div className="d-lg-flex gap-2 justify-content-between">
             <h6 className="mb-1">{task.title}</h6>
-            <small className="text-muted">Created: {toLocalISOString(task.createdAt).split("T")[0]}</small>
+            <small className="text-muted">Created: {task.createdAt?.split("T")[0]}</small>
           </div>
           <p className="mb-1 text-muted small">{task.description}</p>
           <div className="d-flex gap-2 align-items-center flex-wrap">
             <small className="text-muted">
-              <i className="bi bi-calendar-event"></i> Due: {toLocalISOString(task.dueDate).split("T")[0]}
+              <i className="bi bi-calendar-event"></i> Due: {task.dueDate?.split("T")[0]}
             </small>
             <div className="d-flex gap-2 align-items-center flex-wrap">
               {task.personId &&
@@ -38,7 +37,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
               <span className={`badge ${status.class}`}>
                 {status.message}
               </span>
-              {task.attachments?.length &&
+              {task.attachments?.length > 0 &&
                 <span className={`badge bg-secondary`}>
                   <i className="bi bi-paperclip"></i> {task.attachments.length} attachment{task.attachments.length > 1 && "s"}
                 </span>
