@@ -1,4 +1,3 @@
-import { toLocalISOString } from "../../utils/converters"
 import { useAuth } from "../../context/AuthContext.jsx";
 
 const STATUSES = {
@@ -26,7 +25,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
           <p className="mb-1 text-muted small">{task.description}</p>
           <div className="d-flex gap-2 align-items-center flex-wrap">
             <small className="text-muted">
-              <i className="bi bi-calendar-event"></i> Due: {task.dueDate?.split("T")[0]}
+              <i className="bi bi-calendar-event"></i> Due: {task.dueDate ? task.dueDate.split("T")[0] : <>n/a</>}
             </small>
             <div className="d-flex gap-2 align-items-center flex-wrap">
               {task.personId &&

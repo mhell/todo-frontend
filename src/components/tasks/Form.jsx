@@ -4,11 +4,11 @@ import { useForm, useWatch } from "react-hook-form";
 import { toLocalISOString } from "../../utils/converters"
 
 const Form = ({header, onSave, onCancel, editTask}) => {
-  const defaultValues = {...editTask, dueDate: editTask && editTask.dueDate.substring(0, 16)};
-  const { control, register, reset, setValue, handleSubmit, formState: { errors } } = useForm({defaultValues: defaultValues});
+  const defaultValues = {...editTask, dueDate: editTask?.dueDate?.substring(0, 16)};
+  const { control, register, reset, setValue, handleSubmit, formState: { errors, isDirty } } = useForm({defaultValues: defaultValues});
   const attachments = useWatch({control, name: "attachments", defaultValue: editTask?.attachments || []});
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
-
+  
   const onSubmit = (data) => {
     onSave(editTask ? {...editTask, ...data} : data);
     clearAttachments();
@@ -29,7 +29,11 @@ const Form = ({header, onSave, onCancel, editTask}) => {
               Title
             </label>
             <input type="text" className="form-control" id="todoTitle" 
-            {...register("title", {required: "Title is required", maxLength: {value: 100, message: "Title needs to be less than 100 characters"}})} />
+              {...register("title", {
+                required: "Title is required",
+                minLength: { value: 2, message: "Title needs to be more than 2 characters" },
+                maxLength: { value: 100, message: "Title needs to be less than 100 characters" },
+              })}/>
             <div className="invalid-feedback d-block">{errors.title?.message}</div>
           </div>
           <div className="mb-3">
@@ -37,7 +41,10 @@ const Form = ({header, onSave, onCancel, editTask}) => {
               Description
             </label>
             <textarea className="form-control" id="todoDescription" rows="3"
-            {...register("description", {required: "Description is required", maxLength: {value: 100, message: "Description needs to be less than 500 characters"}})}></textarea>
+              {...register("description", {
+                required: "Description is required",
+                maxLength: { value: 500, message: "Description needs to be less than 500 characters" },
+              })}></textarea>
             <div className="invalid-feedback d-block">{errors.description?.message}</div>
           </div>
           <div className="row">
@@ -47,12 +54,12 @@ const Form = ({header, onSave, onCancel, editTask}) => {
               </label>
               <input type="datetime-local" className="form-control" id="todoDueDate" 
               {...register("dueDate", {
-                required: "Due date needs to be set", 
                 validate: (value) => {
                   const minDate = toLocalISOString(new Date()).substring(0, 16);
-                  const currentDueDate = editTask?.dueDate.substring(0, 16);
+                  const currentDueDate = Date.parse(editTask?.dueDate?.substring(0, 16));
+                  if (!value) return true;
                   if (value > minDate) return true;
-                  if (editTask && value.substring(0, 16) === currentDueDate) return true;
+                  if (editTask && Date.parse(value) === currentDueDate) return true;
                   return "Due date cannot be set in the past";
                 },
               })} />
@@ -94,7 +101,7 @@ const Form = ({header, onSave, onCancel, editTask}) => {
                 Cancel
               </button>
             }
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={!isDirty}>
               { editTask ? "Save Changes" : <><i className='bi bi-plus-lg me-2'></i> Add Task</>}
             </button>
           </div>

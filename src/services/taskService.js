@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:9090/api/todo";
 
 export const taskService = {
-  getAllTasks: async (token) => {
+  getAll: async (token) => {
     try {
       const response = await axios.get(API_URL, {
         headers: {
@@ -16,23 +16,28 @@ export const taskService = {
     }
   },
 
-  createTask: async (task, files, token) => {
+  create: async (task, files, token) => {
+    const form = new FormData();
+    form.append("todo", new Blob([JSON.stringify(task)], { type: "application/json" }));
+    files.forEach((file) => {
+      form.append("files", file);
+    });
     try {
-      const response = await axios.postForm(API_URL, {
-        todo: new Blob([JSON.stringify(task)], { type: 'application/json' }),
-        ...(files?.length ? {files: files} : {})
-      }, {
+      const response = await axios.postForm(API_URL, form, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.message || "Error creating task");
+      throw new Error(error.response?.data.errors[0] || error.message || "Error creating task");
     }
   },
 
-  updateTask: async (task, attachments) => {},
+  updateTask: async (task, attachments) => {
+    
+  },
 
   deleteTask: async (taskId) => {},
 };

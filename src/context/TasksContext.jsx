@@ -7,53 +7,60 @@ const TaskContext = createContext(null);
 export const TasksProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(true);
-  const {token} = useAuth();
+  const [error, setError] = useState(null);
+  const { token } = useAuth();
 
   useEffect(() => {
-    getAll()
+    getAll();
   }, []);
 
   const getAll = async () => {
     try {
       setIsLoading(true);
-      const fetchedTasks = await taskService.getAllTasks(token);
+      const fetchedTasks = await taskService.getAll(token);
       setTasks(fetchedTasks);
       setIsLoading(false);
       setError(null);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
   };
 
   const create = async (task) => {
-    const {attachments, ...taskWithoutFiles} = task;
+    const { attachments, ...taskWithoutFiles } = task;
+    const filesArray = Array.from(attachments);
     try {
       setIsLoading(true);
-      const createdTask = await taskService.createTask(taskWithoutFiles, attachments, token);
+      const createdTask = await taskService.create(taskWithoutFiles, filesArray, token);
       setTasks((tasks) => [...tasks, createdTask]);
       setIsLoading(false);
       setError(null);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-  }
-
-  // setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
-
+  };
   return (
-    <TaskContext.Provider value={{tasks, isLoading, error, getAll, create}}>
+    <TaskContext.Provider value={{ tasks, isLoading, error, getAll, create }}>
       {children}
+      {error}
     </TaskContext.Provider>
   );
 };
 
+const update = (task) => {
+  const { attachments, ...taskWithoutFiles } = task;
+  const filesArray = Array.from(attachments);
+  
+}
+
+// setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
+
 export const useTasks = () => {
-    const context = useContext(TaskContext);
-    if (!context) {
-        throw new Error('useTasks must be used within an TasksProvider');
-    }
-    return context;
+  const context = useContext(TaskContext);
+  if (!context) {
+    throw new Error("useTasks must be used within an TasksProvider");
+  }
+  return context;
 };
 
 export default TasksProvider;

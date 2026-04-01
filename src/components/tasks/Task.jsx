@@ -18,7 +18,6 @@ const Task = () => {
   const visibleTasks = useMemo(() => tasks?.
     filter(task => isFiltered ? !task.completed : true).
     sort((a, b) => {
-      console.log(new Date(a.createdAt));
       return isSorted ? Date.parse(b.dueDate) - Date.parse(a.dueDate) : 0;
     }, [tasks, isSorted, isFiltered]));
 
