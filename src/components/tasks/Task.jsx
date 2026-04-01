@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useMemo } from "react";
 import "./Task.css";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../header/Header.jsx";
@@ -15,12 +15,15 @@ const Task = () => {
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
   const {tasks, isLoading, error, getAll, create} = useTasks();
-
+  const visibleTasks = useMemo(() => tasks?.
+    filter(task => isFiltered ? !task.completed : true).
+    sort((a, b) => {
+      console.log(new Date(a.createdAt));
+      return isSorted ? Date.parse(b.dueDate) - Date.parse(a.dueDate) : 0;
+    }, [tasks, isSorted, isFiltered]));
 
   const handleNewTask = (task) => {
     create(task);
-    
-    
   }
 
   const handleUpdateTask = (task) => {
@@ -53,7 +56,7 @@ const Task = () => {
               <Form header="Add New Task" onSave={handleNewTask} />
               <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSorted} isFiltered={isFiltered}>
                 {
-                  tasks?.map((task) => (
+                  visibleTasks?.map((task) => (
                     <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
                   ))
                 }

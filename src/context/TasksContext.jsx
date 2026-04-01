@@ -10,8 +10,6 @@ export const TasksProvider = ({ children }) => {
   const [error, setError] = useState(true);
   const {token} = useAuth();
 
-  console.log(tasks);
-
   useEffect(() => {
     getAll()
   }, []);
@@ -29,7 +27,6 @@ export const TasksProvider = ({ children }) => {
   };
 
   const create = async (task) => {
-    console.log("hej");
     const {attachments, ...taskWithoutFiles} = task;
     try {
       setIsLoading(true);
