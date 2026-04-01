@@ -16,11 +16,11 @@ export const taskService = {
     }
   },
 
-  createTasks: async (task, attachments, token) => {
+  createTask: async (task, files, token) => {
     try {
       const response = await axios.postForm(API_URL, {
         todo: new Blob([JSON.stringify(task)], { type: 'application/json' }),
-        ...(attachments?.length ? {files: attachments} : {})
+        ...(files?.length ? {files: files} : {})
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -32,7 +32,7 @@ export const taskService = {
     }
   },
 
-  updateTasks: async (task, attachments) => {},
+  updateTask: async (task, attachments) => {},
 
-  deleteTasks: async (taskId) => {},
+  deleteTask: async (taskId) => {},
 };

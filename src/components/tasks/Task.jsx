@@ -14,19 +14,20 @@ const Task = () => {
   const [isSorted, setIsSorted] = useSessionState("isTasksSorted", false);
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
-  const {tasks} = useTasks();
+  const {tasks, isLoading, error, getAll, create} = useTasks();
 
-  tasks && console.log(tasks);
 
   const handleNewTask = (task) => {
-    console.log(task);
+    create(task);
+    
+    
   }
 
   const handleUpdateTask = (task) => {
     setEditTask(null);
   }
 
-  const handleDeleteTask = (task) => {
+  const handleDeleteTask = (taskId) => {
   }
   
   const handleToggleSort = () => {

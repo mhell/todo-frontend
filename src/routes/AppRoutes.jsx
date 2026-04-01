@@ -5,7 +5,7 @@ import Dashboard from "../components/dashboard/Dashboard";
 import Task from "../components/tasks/Task.jsx";
 import NotFound from "../components/not_found/NotFound.jsx";
 import RoleProtectedRoute from "./RoleProtectedRoute.jsx";
-import { TasksProvider } from "../context/TasksContext.jsx"
+import TasksProvider from "../context/TasksContext.jsx"
 
 const AppRoutes = () => {
   const { hasRole } = useAuth();

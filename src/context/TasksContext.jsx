@@ -5,10 +5,12 @@ import { useAuth } from "./AuthContext.jsx";
 const TaskContext = createContext(null);
 
 export const TasksProvider = ({ children }) => {
-  const [tasks, setTasks] = useState(null);
+  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(true);
-  const { token } = useAuth();
+  const {token} = useAuth();
+
+  console.log(tasks);
 
   useEffect(() => {
     getAll()
@@ -26,8 +28,24 @@ export const TasksProvider = ({ children }) => {
     }
   };
 
+  const create = async (task) => {
+    console.log("hej");
+    const {attachments, ...taskWithoutFiles} = task;
+    try {
+      setIsLoading(true);
+      const createdTask = await taskService.createTask(taskWithoutFiles, attachments, token);
+      setTasks((tasks) => [...tasks, createdTask]);
+      setIsLoading(false);
+      setError(null);
+    } catch (error) {
+      setError(error.message)
+    }
+  }
+
+  // setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
+
   return (
-    <TaskContext.Provider value={{tasks, isLoading, error}}>
+    <TaskContext.Provider value={{tasks, isLoading, error, getAll, create}}>
       {children}
     </TaskContext.Provider>
   );
@@ -40,3 +58,5 @@ export const useTasks = () => {
     }
     return context;
 };
+
+export default TasksProvider;
