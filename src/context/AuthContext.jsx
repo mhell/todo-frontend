@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../services/authService";
 import { initializeWindowEvents, removeWindowEvents } from "../utils/windowEvents";
 
+const LOGOUT_ON_RELOAD = false;
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -23,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
     // Initialize window events only if there's a token
     let cleanup;
-    if (token) {
+    if (token && LOGOUT_ON_RELOAD) {
       cleanup = initializeWindowEvents(() => {
         // Don't need to do anything here, handleUnload will handle the logout
         setUser(null);

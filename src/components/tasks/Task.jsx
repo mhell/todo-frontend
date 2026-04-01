@@ -23,6 +23,7 @@ const Task = () => {
   }
 
   const handleUpdateTask = (task) => {
+    setEditTask(null);
   }
 
   const handleDeleteTask = (task) => {
@@ -56,9 +57,9 @@ const Task = () => {
                   ))
                 }
               </TaskList>
-              <Edit header="Edit Task" isOpen={editTask} onCancel={handleCancel}>
+              <Edit header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
                 { editTask && 
-                  <Form key={editTask.id} onSave={(task) => {setEditTask(null); handleUpdateTask(task)}} onCancel={handleCancel} editTask={editTask} />
+                  <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />
                 }
               </Edit>
             </div>
