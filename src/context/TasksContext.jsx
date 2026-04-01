@@ -39,21 +39,28 @@ export const TasksProvider = ({ children }) => {
       setError(error.message);
     }
   };
+
+  const update = async (task) => {
+    const { attachments, ...taskWithoutFiles } = task;
+    const filesArray = Array.from(attachments);
+    try {
+      setIsLoading(true);
+      const updatedTask = await taskService.update(taskWithoutFiles, filesArray, token);
+      setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
+      setIsLoading(false);
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+    }
+  }
+
   return (
-    <TaskContext.Provider value={{ tasks, isLoading, error, getAll, create }}>
+    <TaskContext.Provider value={{tasks, isLoading, error, getAll, create, update}}>
       {children}
-      {error}
     </TaskContext.Provider>
   );
 };
 
-const update = (task) => {
-  const { attachments, ...taskWithoutFiles } = task;
-  const filesArray = Array.from(attachments);
-  
-}
-
-// setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
 
 export const useTasks = () => {
   const context = useContext(TaskContext);

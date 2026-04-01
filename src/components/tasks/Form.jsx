@@ -4,11 +4,11 @@ import { useForm, useWatch } from "react-hook-form";
 import { toLocalISOString } from "../../utils/converters"
 
 const Form = ({header, onSave, onCancel, editTask}) => {
-  const defaultValues = {...editTask, dueDate: editTask?.dueDate?.substring(0, 16)};
-  const { control, register, reset, setValue, handleSubmit, formState: { errors, isDirty } } = useForm({defaultValues: defaultValues});
+  const defaultValues = {...editTask, ...(editTask?.dueDate ? {dueDate: editTask.dueDate.substring(0, 16)} : {})};
+  const { control, register, reset, resetField, setValue, handleSubmit, formState: { errors, isDirty } } = useForm({defaultValues: defaultValues});
   const attachments = useWatch({control, name: "attachments", defaultValue: editTask?.attachments || []});
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
-  
+
   const onSubmit = (data) => {
     onSave(editTask ? {...editTask, ...data} : data);
     clearAttachments();
@@ -16,7 +16,7 @@ const Form = ({header, onSave, onCancel, editTask}) => {
   }
 
   const clearAttachments = () => {
-    setValue("attachments", [])
+    setValue("attachments", [], { shouldDirty: true });
   }
 
   return (

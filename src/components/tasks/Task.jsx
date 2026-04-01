@@ -14,7 +14,7 @@ const Task = () => {
   const [isSorted, setIsSorted] = useSessionState("isTasksSorted", false);
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
-  const {tasks, isLoading, error, getAll, create} = useTasks();
+  const {tasks, isLoading, error, getAll, create, update} = useTasks();
   const visibleTasks = useMemo(() => tasks?.
     filter(task => isFiltered ? !task.completed : true).
     sort((a, b) => {
@@ -26,6 +26,7 @@ const Task = () => {
   }
 
   const handleUpdateTask = (task) => {
+    update(task);
     setEditTask(null);
   }
 

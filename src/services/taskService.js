@@ -17,27 +17,48 @@ export const taskService = {
   },
 
   create: async (task, files, token) => {
-    const form = new FormData();
-    form.append("todo", new Blob([JSON.stringify(task)], { type: "application/json" }));
-    files.forEach((file) => {
-      form.append("files", file);
-    });
+    const form = createFormData(task, files);
     try {
       const response = await axios.postForm(API_URL, form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data.errors[0] || error.message || "Error creating task");
     }
   },
 
-  updateTask: async (task, attachments) => {
-    
+  update: async (task, files, token) => {
+    const form = createFormData(task, files);
+    try {
+      const response = await axios.putForm(`${API_URL}/${task.id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data.errors[0] || error.message || "Error creating task");
+    }
   },
 
-  deleteTask: async (taskId) => {},
+  delete: async (taskId) => {
+
+  },
 };
+
+function createFormData(task, files) {
+  const form = new FormData();
+  form.append("todo", new Blob([JSON.stringify(task)], { type: "application/json" }));
+  if (files) {
+    files.forEach((file) => {
+      form.append("files", file);
+    });
+  } else {
+    form.append("files", null);
+  }
+  return form;
+}
+
