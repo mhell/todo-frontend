@@ -50,13 +50,25 @@ export const taskService = {
     }
   },
 
-  delete: async (taskId) => {},
+  remove: async (taskId, token) => {
+    try {
+      const response = await axios.delete(`${API_URL}/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error deleting task");
+      apiError.status = error.response?.status;
+      throw apiError;
+    }
+  },
 };
 
 function createFormData(task, files) {
   const form = new FormData();
   form.append("todo", new Blob([JSON.stringify(task)], { type: "application/json" }));
-  if (files) {
+  if (files.length) {
     files.forEach((file) => {
       form.append("files", file);
     });
