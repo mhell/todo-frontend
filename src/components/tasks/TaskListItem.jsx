@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 const STATUSES = {
@@ -9,13 +10,21 @@ const STATUSES = {
 
 const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
   const { isAdmin } = useAuth();
+  const ref = useRef(null); 
   const status = task.completed ? STATUSES.completed
                 : !task.dueDate ? STATUSES.pending
                 : Date.parse(task.dueDate) < Date.now() ? STATUSES.overdue
                 : STATUSES.inProgress;
 
+  useEffect(() => {
+    ref.current.style.opacity = 1;
+    return () => {
+      //ref.current.style.opacity = 0;
+  };
+  }, [])
+
   return (
-    <div className="list-group-item list-group-item-action">
+    <div className="list-group-item list-group-item-action" ref={ref}>
       <div className="d-md-flex gap-3 w-100 justify-content-between align-items-start">
         <div className="flex-grow-1">
           <div className="d-lg-flex gap-2 justify-content-between">
@@ -44,7 +53,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
             </div>
           </div>
         </div>
-        <div className="btn-group mt-3 mt-md-0">
+        <div className="edit-buttons btn-group mt-3 mt-md-0">
           <button className={`btn btn-outline-success btn-sm ${task.completed && "text-bg-success"}`} title="Complete" 
             onClick={() => {
               task.completed = !task.completed;

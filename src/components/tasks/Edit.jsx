@@ -12,6 +12,13 @@ const Edit = ({children, header, isOpen, onCancel}) => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const modalEl = modalRef.current;
+    modalEl?.addEventListener("hidden.bs.modal", onCancel);
+    return () => {
+      modalEl?.removeEventListener("hidden.bs.modal", onCancel);
+    };
+  }, []);
 
   return (
     <div className="modal fade" tabIndex="-1" aria-hidden="true" id="editModal" ref={modalRef}>

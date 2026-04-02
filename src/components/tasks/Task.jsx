@@ -61,15 +61,15 @@ const Task = () => {
                   ))
                 }
               </TaskList>
-              <Edit header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
-                { editTask && 
-                  <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />
-                }
-              </Edit>
             </div>
           </div>
         </div>
       </main>
+      <Edit header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
+        { editTask && 
+          <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />
+        }
+      </Edit>
     </div>
   );
 };
