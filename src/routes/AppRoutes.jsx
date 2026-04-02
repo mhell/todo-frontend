@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Login from "../components/login/Login";
 import Dashboard from "../components/dashboard/Dashboard";
-import Task from "../components/tasks/Task.jsx";
+import Task from "../components/task/Task.jsx";
 import NotFound from "../components/not_found/NotFound.jsx";
 import RoleProtectedRoute from "./RoleProtectedRoute.jsx";
 import TaskProvider from "../context/TaskContext.jsx";
@@ -18,7 +18,9 @@ const AppRoutes = () => {
 
       {/* Dashboard route - only for admin */}
       {hasRole("ROLE_ADMIN") && (
-        <Route path="/dashboard" element={
+        <Route
+          path="/dashboard"
+          element={
             <RoleProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
               <Dashboard />
             </RoleProtectedRoute>
@@ -27,7 +29,10 @@ const AppRoutes = () => {
       )}
 
       {/* Tasks route - for both admin and user */}
-      <Route key="task" path="/dashboard/tasks" element={
+      <Route
+        key="task"
+        path="/dashboard/tasks"
+        element={
           <RoleProtectedRoute requiredRoles={["ROLE_USER", "ROLE_ADMIN"]}>
             <TaskProvider>
               <PersonProvider>

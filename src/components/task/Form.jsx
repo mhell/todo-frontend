@@ -2,11 +2,18 @@ import "./Task.css";
 import React, { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { usePersons } from "../../context/PersonContext.jsx";
-import { toLocalISOString } from "../../utils/converters";
+import { toLocalISOString } from "../../utils/converters.js";
 
 const Form = ({ header, onSave, onCancel, editTask }) => {
   const defaultValues = { ...editTask, ...(editTask?.dueDate ? { dueDate: editTask.dueDate.substring(0, 16) } : {}) };
-  const { control, register, reset,  setValue, handleSubmit, formState: { errors, isDirty } } = useForm({ defaultValues: defaultValues });
+  const {
+    control,
+    register,
+    reset,
+    setValue,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = useForm({ defaultValues: defaultValues });
   const { persons } = usePersons();
   const attachments = useWatch({ control, name: "attachments", defaultValue: editTask?.attachments || [] });
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
@@ -22,7 +29,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
   };
 
   return (
-    <div className="card shadow-sm task-form-section">
+    <div className="card shadow-sm form-section">
       <div className="card-body">
         {header && <h2 className="card-title mb-4">{header}</h2>}
         <form id="todoForm" onSubmit={handleSubmit(onSubmit)}>
@@ -30,7 +37,10 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
             <label htmlFor="todoTitle" className="form-label">
               Title
             </label>
-            <input type="text" className="form-control" id="todoTitle"
+            <input
+              type="text"
+              className="form-control"
+              id="todoTitle"
               {...register("title", {
                 required: "Title is required",
                 minLength: { value: 2, message: "Title needs to be more than 2 characters" },
@@ -43,7 +53,10 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
             <label htmlFor="todoDescription" className="form-label">
               Description
             </label>
-            <textarea className="form-control" id="todoDescription" rows="3"
+            <textarea
+              className="form-control"
+              id="todoDescription"
+              rows="3"
               {...register("description", {
                 required: "Description is required",
                 maxLength: { value: 500, message: "Description needs to be less than 500 characters" },
@@ -55,8 +68,12 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
               <label htmlFor="todoDueDate" className="form-label">
                 Due Date
               </label>
-              <input type="datetime-local" className="form-control" id="todoDueDate"
-                {...register("dueDate", {validate: (value) => {
+              <input
+                type="datetime-local"
+                className="form-control"
+                id="todoDueDate"
+                {...register("dueDate", {
+                  validate: (value) => {
                     const minDate = toLocalISOString(new Date()).substring(0, 16);
                     const currentDueDate = Date.parse(editTask?.dueDate?.substring(0, 16));
                     if (!value) return true;
@@ -107,7 +124,13 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
               </button>
             )}
             <button type="submit" className="btn btn-primary" disabled={!isDirty}>
-              {editTask ? ("Save Changes") : (<><i className="bi bi-plus-lg me-2"></i> Add Task</>)}
+              {editTask ? (
+                "Save Changes"
+              ) : (
+                <>
+                  <i className="bi bi-plus-lg me-2"></i> Add Task
+                </>
+              )}
             </button>
           </div>
         </form>

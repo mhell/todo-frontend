@@ -1,3 +1,4 @@
+import "./Edit.css";
 import {useEffect, useRef} from 'react';
 import Modal from 'bootstrap/js/dist/modal';
 
@@ -21,7 +22,7 @@ const Edit = ({children, header, isOpen, onCancel}) => {
   }, []);
 
   return (
-    <div className="modal fade" tabIndex="-1" aria-hidden="true" id="editModal" ref={modalRef}>
+    <div id="edit" className="modal fade" tabIndex="-1" aria-hidden="true"  ref={modalRef}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">

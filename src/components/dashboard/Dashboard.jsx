@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Dashboard.css";
 import Sidebar from "../sidebar/Sidebar.jsx";
-import Header from "../header/Header.jsx";
+import Header from "../common/Header.jsx";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -92,9 +92,7 @@ const Dashboard = () => {
                   <div className={isOverdue ? "text-danger" : ""}>{new Date(task.dueDate).toLocaleDateString()}</div>
                 </td>
                 <td>
-                  <span className={`badge ${getStatusBadgeClass(task.status)}`}>
-                    {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-                  </span>
+                  <span className={`badge ${getStatusBadgeClass(task.status)}`}>{task.status.charAt(0).toUpperCase() + task.status.slice(1)}</span>
                 </td>
                 <td>
                   <div className="dropdown">
@@ -142,11 +140,7 @@ const Dashboard = () => {
     <div id="dashboard" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
-        <Header
-          title="Dashboard"
-          subtitle="Welcome back! Here's your tasks overview"
-          onToggleSidebar={() => setIsSidebarOpen(true)}
-        />
+        <Header title="Dashboard" subtitle="Welcome back! Here's your tasks overview" onToggleSidebar={() => setIsSidebarOpen(true)} />
 
         <div className="dashboard-content">
           <div className="stats-grid">

@@ -1,0 +1,10 @@
+#edit {
+  .modal-body .form-section {
+    margin-bottom: 0;
+    box-shadow: none;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--border-color);
+  }
+}

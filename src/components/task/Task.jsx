@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from "react";
 import "./Task.css";
+import React, { useState, useMemo } from "react";
 import Sidebar from "../sidebar/Sidebar.jsx";
-import Header from "../header/Header.jsx";
+import Header from "../common/Header.jsx";
 import Form from "./Form.jsx";
-import Edit from "./Edit.jsx";
+import Edit from "../common/Edit.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskListItem from "./TaskListItem.jsx";
 import useSessionState from "../../hooks/useSessionState.js";
@@ -15,10 +15,11 @@ const Task = () => {
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
   const { tasks, isLoading: isLoadingTasks, error: errorTasks, create, update, remove } = useTasks();
-  const visibleTasks = useMemo(() => tasks.
-        filter((task) => isFiltered ? !task.completed : true).
-        sort((a, b) => isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)
-      ,[tasks, isSorted, isFiltered]);
+  const visibleTasks = useMemo(
+    () =>
+      tasks.filter((task) => (isFiltered ? !task.completed : true)).sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
+    [tasks, isSorted, isFiltered]
+  );
 
   const handleNewTask = (task) => {
     create(task);

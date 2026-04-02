@@ -1,7 +1,7 @@
 
 const TaskList = ({children, onSort, onFilter, isFiltered, isSorted}) => {
   return (
-    <div className="card shadow-sm tasks-list mt-4">
+    <div className="card shadow-sm item-list mt-4">
       <div className="card-header bg-white d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">Tasks</h5>
         <div className="btn-group">

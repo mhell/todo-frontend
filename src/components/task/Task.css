@@ -21,20 +21,20 @@
 
   /* Card and Form Styles */
   .card,
-  .task-form-section,
-  .tasks-list {
+  .form-section,
+  .item-list {
     background: var(--background-light);
     border: none;
     border-radius: 4px;
     box-shadow: 0 2px 8px var(--shadow-color);
   }
 
-  .task-form-section {
+  .form-section {
     padding: 1.25rem;
     margin-bottom: 1.5rem;
   }
 
-  .task-form-section h2 {
+  .form-section h2 {
     color: var(--primary-color);
     font-size: 1.5rem;
     font-weight: 600;
@@ -74,7 +74,7 @@
   }
 
   /* List Styles */
-  .tasks-list {
+  .item-list {
     padding: 1rem;
   }
 
@@ -89,7 +89,7 @@
     transition: all 0.3s ease-in-out;
   }
 
-  .tasks-list .list-group-item {
+  .item-list .list-group-item {
     opacity: 0;
   }
 
@@ -130,16 +130,6 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Edit Modal */
-  .modal-body .task-form-section {
-    margin-bottom: 0;
-    box-shadow: none;
-  }
-
-  .modal-header {
-    border-bottom: 1px solid var(--border-color);
-  }
-
   /* Responsive */
   @media (max-width: 768px) {
     .dashboard-main {
@@ -147,13 +137,15 @@
       width: 100%;
     }
 
-    .task-form-section,
-    .tasks-list {
+    .form-section,
+    .item-list {
       padding: 1rem;
     }
 
+    /* 
     .btn {
-      /* width: 100%; */
-    }
+      width: 100%;
+    } 
+    */
   }
 }
