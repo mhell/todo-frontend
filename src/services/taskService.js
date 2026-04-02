@@ -12,7 +12,9 @@ export const taskService = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(error.message || "Error fetching tasks");
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching tasks");
+      apiError.status = error.response?.status;
+      throw apiError;
     }
   },
 
@@ -26,7 +28,9 @@ export const taskService = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data.errors[0] || error.message || "Error creating task");
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error creating task");
+      apiError.status = error.response?.status;
+      throw apiError;
     }
   },
 
@@ -40,13 +44,13 @@ export const taskService = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data.errors[0] || error.message || "Error creating task");
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error updating task");
+      apiError.status = error.response?.status;
+      throw apiError;
     }
   },
 
-  delete: async (taskId) => {
-
-  },
+  delete: async (taskId) => {},
 };
 
 function createFormData(task, files) {
@@ -61,4 +65,3 @@ function createFormData(task, files) {
   }
   return form;
 }
-

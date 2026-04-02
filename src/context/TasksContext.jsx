@@ -8,7 +8,7 @@ export const TasksProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   useEffect(() => {
     getAll();
@@ -19,10 +19,18 @@ export const TasksProvider = ({ children }) => {
       setIsLoading(true);
       const fetchedTasks = await taskService.getAll(token);
       setTasks(fetchedTasks);
-      setIsLoading(false);
       setError(null);
     } catch (error) {
+      console.log(error);
+
+
+      if (error.status === 403) {
+        await logout();
+        return;
+      }
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -33,10 +41,15 @@ export const TasksProvider = ({ children }) => {
       setIsLoading(true);
       const createdTask = await taskService.create(taskWithoutFiles, filesArray, token);
       setTasks((tasks) => [...tasks, createdTask]);
-      setIsLoading(false);
       setError(null);
     } catch (error) {
+      if (error.status === 403) {
+        await logout();
+        return;
+      }
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,10 +60,15 @@ export const TasksProvider = ({ children }) => {
       setIsLoading(true);
       const updatedTask = await taskService.update(taskWithoutFiles, filesArray, token);
       setTasks(tasks.map((task) => task.id === updatedTask.id ? updatedTask : task));
-      setIsLoading(false);
       setError(null);
     } catch (error) {
+      if (error.status === 403) {
+        await logout();
+        return;
+      }
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
