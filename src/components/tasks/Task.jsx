@@ -15,11 +15,10 @@ const Task = () => {
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const [editTask, setEditTask] = useState(null);
   const { tasks, isLoading: isLoadingTasks, error: errorTasks, create, update, remove } = useTasks();
-  const visibleTasks = useMemo(() =>tasks?.
-      filter((task) => (isFiltered ? !task.completed : true)).
-      sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
-    [tasks, isSorted, isFiltered]
-  );
+  const visibleTasks = useMemo(() => tasks.
+        filter((task) => isFiltered ? !task.completed : true).
+        sort((a, b) => isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)
+      ,[tasks, isSorted, isFiltered]);
 
   const handleNewTask = (task) => {
     create(task);
