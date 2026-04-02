@@ -5,7 +5,8 @@ import Dashboard from "../components/dashboard/Dashboard";
 import Task from "../components/tasks/Task.jsx";
 import NotFound from "../components/not_found/NotFound.jsx";
 import RoleProtectedRoute from "./RoleProtectedRoute.jsx";
-import TasksProvider from "../context/TasksContext.jsx"
+import TaskProvider from "../context/TaskContext.jsx";
+import PersonProvider from "../context/PersonContext.jsx";
 
 const AppRoutes = () => {
   const { hasRole } = useAuth();
@@ -28,15 +29,17 @@ const AppRoutes = () => {
       {/* Tasks route - for both admin and user */}
       <Route key="task" path="/dashboard/tasks" element={
           <RoleProtectedRoute requiredRoles={["ROLE_USER", "ROLE_ADMIN"]}>
-            <TasksProvider>
-              <Task />
-            </TasksProvider>
+            <TaskProvider>
+              <PersonProvider>
+                <Task />
+              </PersonProvider>
+            </TaskProvider>
           </RoleProtectedRoute>
         }
       />
 
       {/* Redirect non-admin users to tasks page when trying to access dashboard */}
-      <Route path="/dashboard" element={<Navigate to="/dashboard/tasks" replace />}/>
+      <Route path="/dashboard" element={<Navigate to="/dashboard/tasks" replace />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

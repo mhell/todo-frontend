@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { usePersons } from "../../context/PersonContext.jsx";
 
 const STATUSES = {
   completed: { class: "text-bg-success", message: "completed" },
@@ -10,6 +11,7 @@ const STATUSES = {
 
 const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
   const { isAdmin } = useAuth();
+  const { getById: getPersonById } = usePersons();
   const ref = useRef(null); 
   const status = task.completed ? STATUSES.completed
                 : !task.dueDate ? STATUSES.pending
@@ -17,9 +19,10 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
                 : STATUSES.inProgress;
 
   useEffect(() => {
-    ref.current.style.opacity = 1;
+    const node = ref.current;
+    node.style.opacity = 1;
     return () => {
-      //ref.current.style.opacity = 0;
+      //node.style.opacity = 0;
   };
   }, [])
 
@@ -39,7 +42,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
             <div className="d-flex gap-2 align-items-center flex-wrap">
               {task.personId &&
                 <span className="badge bg-info">
-                  <i className="bi bi-person"></i> {task.personId}
+                  <i className="bi bi-person"></i> {getPersonById(task.personId)?.name}
                 </span>
               }
               <span className={`badge ${status.class}`}>
