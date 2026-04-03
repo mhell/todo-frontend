@@ -10,40 +10,38 @@ const Form = ({header, onSave}) => {
 
   return (
     <div className="card shadow-sm form-section">
-      <div className="card-body">
-        {header && <h2 className="card-title mb-4">{header}</h2>}
-        <form id="personForm" onSubmit={handleSubmit(onSubmit)}>
-          <div className="row">
-            <div className="col-6 mb-3">
-              <label htmlFor="personName" className="form-label">
-                Name
-              </label>
-              <input type="text" className="form-control" id="personName"
-                {...register("name", {
-                  required: "Name is required",
-                  minLength: { value: 2, message: "Name needs to be more than 2 characters" },
-                  maxLength: { value: 100, message: "Name needs to be less than 100 characters" },
-                })}
-              />
-              <div className="invalid-feedback d-block">{errors.name?.message}</div>
-            </div>
-            <div className="col-6 mb-3">
-              <label htmlFor="personUsername" className="form-label">
-                Username
-              </label>
-              <input type="text" autoComplete="off" className="form-control" id="personUsername"
-                {...register("username", {
-                  required: "Username is required",
-                  minLength: { value: 4, message: "Username needs to be more than 4 characters" },
-                  maxLength: { value: 50, message: "Username needs to be less than 50 characters" },
-                  pattern: {
-                    value: /^[a-zA-Z0-9._-]{4,50}$/,
-                    message: "Username can only contain letters, numbers, dots, underscores, and hyphens"
-                  },
-                })}
-              />
-              <div className="invalid-feedback d-block">{errors.username?.message}</div>
-            </div>
+    <div className="card-body">
+      {header && <h2 className="card-title mb-4">{header}</h2>}
+      <form id="personForm" onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-3">
+          <label htmlFor="personName" className="form-label">
+            Name
+          </label>
+          <input type="text" className="form-control" id="personName"
+            {...register("name", {
+              required: "Name is required",
+              minLength: { value: 2, message: "Name needs to be more than 2 characters" },
+              maxLength: { value: 100, message: "Name needs to be less than 100 characters" },
+            })}
+          />
+          <div className="invalid-feedback d-block">{errors.name?.message}</div>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="personUsername" className="form-label">
+            Username
+          </label>
+          <input type="text" autoComplete="off" className="form-control" id="personUsername"
+            {...register("username", {
+              required: "Username is required",
+              minLength: { value: 4, message: "Username needs to be more than 4 characters" },
+              maxLength: { value: 50, message: "Username needs to be less than 50 characters" },
+              pattern: {
+                value: /^[a-zA-Z0-9._-]{4,50}$/,
+                message: "Username can only contain letters, numbers, dots, underscores, and hyphens"
+              },
+            })}
+          />
+          <div className="invalid-feedback d-block">{errors.username?.message}</div>
           </div>
           <div className="mb-3">
             <label htmlFor="personEmail" className="form-label">
@@ -62,7 +60,7 @@ const Form = ({header, onSave}) => {
             <div className="invalid-feedback d-block">{errors.email?.message}</div>
           </div>
           <div className="row">
-            <div className="col-6 mb-3">
+            <div className="col-sm-6 mb-3">
               <label htmlFor="password" className="form-label">
                 Password
               </label>
@@ -75,7 +73,7 @@ const Form = ({header, onSave}) => {
               />
               <div className="invalid-feedback d-block">{errors.password?.message}</div>
             </div>
-            <div className="col-6 mb-3">
+            <div className="col-sm-6 mb-3">
               <label htmlFor="confirmPassword" className="form-label">
                 Confirm password
               </label>

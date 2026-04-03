@@ -4,6 +4,8 @@ import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
 import Form from "./Form.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
+import UserList from "./UserList.jsx";
+import UserListItem from "./UserListItem.jsx";
 
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,6 +24,11 @@ const User = () => {
           <div className="row">
             <div className="col-lg-11 col-xl-10 mx-auto">
               <Form header="Add User" onSave={handleNewPerson}/>
+              <UserList>
+                {persons.map((person) => 
+                  <UserListItem key={person.id} user={person} />
+                )}
+              </UserList>
             </div>
           </div>
         </div>

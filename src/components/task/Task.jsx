@@ -56,9 +56,9 @@ const Task = () => {
             <div className="col-lg-11 col-xl-10 mx-auto">
               <Form header="Add New Task" onSave={handleNewTask} />
               <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSorted} isFiltered={isFiltered}>
-                {visibleTasks?.map((task) => (
+                {visibleTasks?.map((task) => 
                   <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
-                ))}
+                )}
               </TaskList>
             </div>
           </div>

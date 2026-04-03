@@ -35,7 +35,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
             <small className="text-muted">Created: {task.createdAt?.split("T")[0]}</small>
           </div>
           <p className="mb-1 text-muted small">{task.description}</p>
-          <div className="d-flex gap-2 align-items-center flex-wrap">
+          <div className="d-flex gap-2 align-items-start flex-column flex-lg-row flex-wrap">
             <small className="text-muted">
               <i className="bi bi-calendar-event"></i> Due: {task.dueDate ? task.dueDate.split("T")[0] : <>n/a</>}
             </small>

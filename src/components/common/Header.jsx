@@ -5,17 +5,17 @@ const Header = ({ title, subtitle, onToggleSidebar, actions }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
+    const handleScroll = (event) => {
+      const scrollPosition = event.target.scrollTop;
       setIsScrolled(scrollPosition > 10);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, true);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className={`dashboard-header ${isScrolled ? "scrolled" : ""}`}>
+    <div id="header" className={`dashboard-header sticky-top ${isScrolled ? "scrolled" : ""}`}>
       <div className="mobile-brand d-md-none">
         <button className="sidebar-toggle" onClick={onToggleSidebar}>
           <i className="bi bi-list"></i>
