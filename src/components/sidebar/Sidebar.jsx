@@ -22,6 +22,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       roles: ["ROLE_USER", "ROLE_ADMIN"], // Show for both user and admin
     },
     {
+      icon: "bi-person-vcard",
+      text: "Users",
+      path: "/dashboard/users",
+      roles: [ "ROLE_ADMIN"], // Show for both user and admin
+    },
+    {
       icon: "bi-calendar3",
       text: "Calendar",
       path: "/dashboard/calendar",

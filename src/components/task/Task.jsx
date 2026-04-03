@@ -3,7 +3,7 @@ import React, { useState, useMemo } from "react";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
 import Form from "./Form.jsx";
-import Edit from "../common/Edit.jsx";
+import Modal from "../common/Modal.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskListItem from "./TaskListItem.jsx";
 import useSessionState from "../../hooks/useSessionState.js";
@@ -64,9 +64,9 @@ const Task = () => {
           </div>
         </div>
       </main>
-      <Edit header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
+      <Modal header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
         {editTask && <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />}
-      </Edit>
+      </Modal>
     </div>
   );
 };

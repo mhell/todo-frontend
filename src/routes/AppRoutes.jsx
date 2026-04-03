@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import Login from "../components/login/Login";
 import Dashboard from "../components/dashboard/Dashboard";
 import Task from "../components/task/Task.jsx";
+import User from "../components/user/User.jsx";
 import NotFound from "../components/not_found/NotFound.jsx";
 import RoleProtectedRoute from "./RoleProtectedRoute.jsx";
 import TaskProvider from "../context/TaskContext.jsx";
@@ -39,6 +40,19 @@ const AppRoutes = () => {
                 <Task />
               </PersonProvider>
             </TaskProvider>
+          </RoleProtectedRoute>
+        }
+      />
+
+      {/* Users route - only for admin */}
+      <Route
+        key="user"
+        path="/dashboard/users"
+        element={
+          <RoleProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
+            <PersonProvider>
+              <User />
+            </PersonProvider>
           </RoleProtectedRoute>
         }
       />
