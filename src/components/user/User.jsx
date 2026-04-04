@@ -10,6 +10,7 @@ import { useConfirmation } from "../../hooks/useConfirmation.jsx";
 
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [editUser, setEditUser] = useState(null);
   const { persons, isLoading, error, create, update, remove } = usePersons();
   const { confirm, confirmModal } = useConfirmation();
 
@@ -39,7 +40,10 @@ const User = () => {
               <Form header="Add User" onSave={handleNewPerson}/>
               <UserList>
                 {persons.map((person) => 
-                  <UserListItem key={person.id} person={person} onSave={handleUpdatePerson} onRemove={handleRemovePerson} />
+                  <UserListItem key={person.id} person={person} isEditing={editUser === person.id}
+                   onToggleEdit={() => setEditUser(editUser !== person.id ? person.id : null)}
+                   onSave={handleUpdatePerson}
+                   onRemove={handleRemovePerson} />
                 )}
               </UserList>
             </div>

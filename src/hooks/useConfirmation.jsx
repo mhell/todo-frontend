@@ -54,8 +54,8 @@ export function useConfirmation() {
             <p>{OPT.message}</p>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => close(true)}>{OPT.confirmText}</button>
-            <button type="button" className="btn btn-primary" onClick={() => close(false)}>{OPT.cancelText}</button>
+            <button type="button" className="btn btn-secondary" onClick={() => close(false)}>{OPT.cancelText}</button>
+            <button type="button" className="btn btn-primary" onClick={() => close(true)}>{OPT.confirmText}</button>
           </div>
         </div>
       </div>
