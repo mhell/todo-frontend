@@ -9,7 +9,7 @@ const STATUSES = {
   inProgress: { class: "text-bg-primary", message: "in-progress" },
 };
 
-const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
+const TaskListItem = ({task, onComplete, onEdit, onRemove}) => {
   const { isAdmin } = useAuth();
   const { getById: getPersonById } = usePersons();
   const ref = useRef(null); 
@@ -68,7 +68,7 @@ const TaskListItem = ({task, onComplete, onEdit, onDelete}) => {
             <i className="bi bi-pencil"></i>
           </button>
           {isAdmin() &&
-            <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onDelete(task)}>
+            <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onRemove(task)}>
               <i className="bi bi-trash"></i>
             </button>
           }

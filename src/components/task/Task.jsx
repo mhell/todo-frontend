@@ -7,12 +7,14 @@ import Modal from "../common/Modal.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskListItem from "./TaskListItem.jsx";
 import useSessionState from "../../hooks/useSessionState.js";
+import { useConfirmation } from "../../hooks/useConfirmation.jsx";
 import { useTasks } from "../../context/TaskContext.jsx";
 
 const Task = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSorted, setIsSorted] = useSessionState("isTasksSorted", false);
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
+  const { confirm, confirmModal } = useConfirmation();
   const [editTask, setEditTask] = useState(null);
   const { tasks, isLoading: isLoadingTasks, error: errorTasks, create, update, remove } = useTasks();
   const visibleTasks = useMemo(
@@ -30,8 +32,12 @@ const Task = () => {
     setEditTask(null);
   };
 
-  const handleDeleteTask = (task) => {
-    remove(task.id);
+  const handleRemoveTask = (task) => {
+    confirm((ok) => {
+      if (ok) {
+        remove(task.id);
+      }
+    });
   };
 
   const handleToggleSort = () => {
@@ -57,7 +63,7 @@ const Task = () => {
               <Form header="Add New Task" onSave={handleNewTask} />
               <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSorted} isFiltered={isFiltered}>
                 {visibleTasks?.map((task) => 
-                  <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onDelete={handleDeleteTask} />
+                  <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onRemove={handleRemoveTask} />
                 )}
               </TaskList>
             </div>
@@ -67,6 +73,7 @@ const Task = () => {
       <Modal header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
         {editTask && <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />}
       </Modal>
+      {confirmModal}
     </div>
   );
 };

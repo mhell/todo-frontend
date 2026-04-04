@@ -20,7 +20,7 @@ export const personService = {
 
   create: async (person, token) => {
     try {
-      const response = await axios.post(`${API_URL}/$register}`, person, {
+      const response = await axios.post(`${API_URL}/register`, person, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

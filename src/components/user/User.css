@@ -73,6 +73,10 @@
     margin-inline-end: 0.75rem;
   }
 
+  .edit-form button {
+    margin-bottom: 0.125rem
+  }
+
   /* List Styles */
   .item-list {
     padding: 1rem;
@@ -105,29 +109,6 @@
   .edit-buttons .btn-sm:active {
     padding: 0 calc(0.5rem * 0.9);
     font-size: calc(0.9rem * 1.1);
-  }
-
-  /* File Attachments */
-  .file-list {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    min-height: 45px;
-    padding: 0.5rem;
-  }
-
-  .badge {
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .mb-3 {
-    margin-bottom: 0.75rem !important;
-  }
-
-  .input-group {
-    margin-bottom: 0.5rem;
   }
 
   /* Responsive */

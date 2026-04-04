@@ -1,11 +1,12 @@
 import React from 'react';
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-const Form = ({header, onSave}) => {
-  const { control, register, reset, setValue, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
+const Form = ({header, onSave, editPerson}) => {
+  const { control, register, reset, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
 
-  const onSubmit = () => {
-
+  const onSubmit = (data) => {
+    onSave(editPerson ? { ...editTask, ...data } : data);
+    reset();
   }
 
   return (

@@ -3,16 +3,29 @@ import React, { useState } from 'react';
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
 import Form from "./Form.jsx";
-import { usePersons } from "../../context/PersonContext.jsx";
 import UserList from "./UserList.jsx";
 import UserListItem from "./UserListItem.jsx";
+import { usePersons } from "../../context/PersonContext.jsx";
+import { useConfirmation } from "../../hooks/useConfirmation.jsx";
 
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { persons } = usePersons();
+  const { persons, isLoading, error, create, update, remove } = usePersons();
+  const { confirm, confirmModal } = useConfirmation();
 
-  const handleNewPerson = () => {
+  const handleNewPerson = (person) => {
+    create(person);
+  }
 
+  const handleUpdatePerson = (person) => {
+  }
+
+  const handleRemovePerson = async (person) => {
+    confirm((ok) => {
+      if (ok) {
+        remove(person.id);
+      }
+    });
   }
 
   return (
@@ -26,13 +39,14 @@ const User = () => {
               <Form header="Add User" onSave={handleNewPerson}/>
               <UserList>
                 {persons.map((person) => 
-                  <UserListItem key={person.id} user={person} />
+                  <UserListItem key={person.id} person={person} onSave={handleUpdatePerson} onRemove={handleRemovePerson} />
                 )}
               </UserList>
             </div>
           </div>
         </div>
       </main>
+      {confirmModal}
     </div>
   );
 };
