@@ -145,30 +145,32 @@
     transform: translateX(4px);
   }
 
+  /* Mobile Bransd */
+
   .mobile-brand {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    margin: -2rem -2rem 1.5rem;
-    padding: 0.75rem;
+    margin: -3rem -3rem 3rem;
+    padding: 1rem;
     background: linear-gradient(135deg, var(--primary-color), #1d1e2f);
+    transition: all 0.3s ease;
   }
 
   .mobile-brand i {
-    font-size: 1.25rem;
-    color: var(--background-light);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.375rem;
-    border-radius: 6px;
-    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 2rem;
+    padding: 0.75rem;
   }
 
   .mobile-brand h4 {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--background-light);
-    font-weight: 500;
+    transition: all 0.3s ease;
   }
 
   .mobile-footer {
