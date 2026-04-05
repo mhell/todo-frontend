@@ -33,8 +33,8 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
             <input  type="text" className="form-control" id="todoTitle"
               {...register("title", {
                 required: "Title is required",
-                minLength: { value: 2, message: "Title needs to be more than 2 characters" },
-                maxLength: { value: 100, message: "Title needs to be less than 100 characters" },
+                minLength: { value: 2, message: "Title needs needs to be at least 2 characters" },
+                maxLength: { value: 100, message: "Title can be max 100 characters" },
               })}
             />
             <div className="invalid-feedback d-block">{errors.title?.message}</div>
@@ -46,7 +46,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
             <textarea className="form-control" id="todoDescription"  rows="3"
               {...register("description", {
                 required: "Description is required",
-                maxLength: { value: 500, message: "Description needs to be less than 500 characters" },
+                maxLength: { value: 500, message: "Description can be max 500 characters" },
               })}></textarea>
             <div className="invalid-feedback d-block">{errors.description?.message}</div>
           </div>

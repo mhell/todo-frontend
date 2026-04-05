@@ -19,6 +19,8 @@ const User = () => {
   }
 
   const handleUpdatePerson = (person) => {
+    update(person);
+    setEditUser(null);
   }
 
   const handleRemovePerson = async (person) => {

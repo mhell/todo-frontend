@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 
 const Form = ({header, onSave, editPerson}) => {
-  const { control, register, reset, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
+  const { register, reset, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
 
   const onSubmit = (data) => {
     onSave(editPerson ? { ...editTask, ...data } : data);
@@ -21,8 +21,8 @@ const Form = ({header, onSave, editPerson}) => {
           <input type="text" className="form-control" id="personName"
             {...register("name", {
               required: "Name is required",
-              minLength: { value: 2, message: "Name needs to be more than 2 characters" },
-              maxLength: { value: 100, message: "Name needs to be less than 100 characters" },
+              minLength: { value: 2, message: "Name needs to be at least 2 characters" },
+              maxLength: { value: 100, message: "Name can be max 100 characters" },
             })}
           />
           <div className="invalid-feedback d-block">{errors.name?.message}</div>
@@ -34,8 +34,8 @@ const Form = ({header, onSave, editPerson}) => {
           <input type="text" autoComplete="off" className="form-control" id="personUsername"
             {...register("username", {
               required: "Username is required",
-              minLength: { value: 4, message: "Username needs to be more than 4 characters" },
-              maxLength: { value: 50, message: "Username needs to be less than 50 characters" },
+              minLength: { value: 4, message: "Username needs to be at least 4 characters" },
+              maxLength: { value: 50, message: "Username can be max 50 characters" },
               pattern: {
                 value: /^[a-zA-Z0-9._-]{4,50}$/,
                 message: "Username can only contain letters, numbers, dots, underscores, and hyphens"
@@ -51,7 +51,7 @@ const Form = ({header, onSave, editPerson}) => {
             <input type="email" className="form-control" id="personEmail"
               {...register("email", {
                 required: "Email is required",
-                maxLength: { value: 150, message: "Email must be less than 150 characters" },
+                maxLength: { value: 150, message: "Email can be max 150 characters" },
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                   message: "Invalid email format"
@@ -68,8 +68,8 @@ const Form = ({header, onSave, editPerson}) => {
               <input type="password" autoComplete="new-password" className="form-control" id="password"
                 {...register("password", {
                   required: "Password is required",
-                  minLength: { value: 8, message: "Password needs to be more than 8 characters" },
-                  maxLength: { value: 100, message: "Password needs to be less than 100 characters" },
+                  minLength: { value: 8, message: "Password needs to be at least 8 characters" },
+                  maxLength: { value: 100, message: "Password can be max 100 characters" },
                 })}
               />
               <div className="invalid-feedback d-block">{errors.password?.message}</div>

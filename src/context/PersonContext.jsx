@@ -32,14 +32,14 @@ export const PersonProvider = ({ children }) => {
   };
 
   const getById = (personId) => {
-    return persons.find((person) => person.id === personId);
+    return persons.find((p) => p.id === personId);
   };
 
   const create = async (person) => {
     try {
       setIsLoading(true);
       const createdPerson = await personService.create(person, token);
-      setPersons((persons) => [...persons, createdPerson]);
+      setPersons([...persons, createdPerson]);
       setError(null);
     } catch (error) {
       if (error.status === 403) {
@@ -55,8 +55,8 @@ export const PersonProvider = ({ children }) => {
   const update = async (person) => {
     try {
       setIsLoading(true);
-      const updatedPerson = await personService.update(person, token);
-      setPersons(persons.map((person) => (person.id === updatedPerson.id ? updatedPerson : person)));
+      await personService.update(person, token);
+      setPersons(persons.map((p) => (p.id === person.id ? person : p)));
       setError(null);
     } catch (error) {
       if (error.status === 403) {
@@ -73,7 +73,7 @@ export const PersonProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await personService.remove(personId, token);
-      setPersons(persons.filter((person) => person.id !== personId));
+      setPersons(persons.filter((p) => p.id !== personId));
       setError(null);
     } catch (error) {
       if (error.status === 403) {

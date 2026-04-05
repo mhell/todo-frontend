@@ -77,6 +77,15 @@
     margin-bottom: 0.125rem
   }
 
+  .edit-input {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .edit-input small {
+    font-size: .875em !important;
+  }
+
   /* List Styles */
   .item-list {
     padding: 1rem;

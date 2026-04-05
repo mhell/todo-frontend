@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useForm } from "react-hook-form";
 import { Collapse } from "bootstrap";
 
 const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
+  const { register, reset, handleSubmit, formState: { errors, isDirty }} = useForm({ defaultValues: person });
   const { user } = useAuth();
   const ref = useRef(null); 
   const collapseRef = useRef(null);
   const [isEditClosing, setIsEditClosing] = useState(false);
-
-  const isDirty = true;
   
   if (!isEditing && !isEditClosing) {
     setIsEditClosing(true);
@@ -22,21 +22,34 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
     };
   }, [])
 
+  const handleClosed = () => {
+    setIsEditClosing(false);
+    reset();
+  }
+
   useEffect(() => {
     const collapseEl = collapseRef.current;
     if (isEditing) {
       Collapse.getOrCreateInstance(collapseRef.current)?.toggle();
     } else {
       Collapse.getInstance(collapseRef.current)?.toggle();
-      collapseEl.addEventListener("hidden.bs.collapse", () => setIsEditClosing(false));
+      collapseEl.addEventListener("hidden.bs.collapse", handleClosed);
     }
     return () => {
-      collapseEl.removeEventListener("hidden.bs.collapse", () => setIsEditClosing(false));
+      collapseEl.removeEventListener("hidden.bs.collapse", handleClosed);
     };
   }, [isEditing]);
 
+  useEffect(() => {
+    reset(person);
+  }, [person]);
+
+  const onSubmit = (data) => {
+    onSave({...person, ...(data.name  ? { name: data.name } : {}), ...(data.email  ? { email: data.email } : {})});
+  } 
+
   return (
-    <div className="list-group-item list-group-item-action" ref={ref}>
+    <div className={`list-group-item ${!isEditing && "list-group-item-action"}`} ref={ref}>
       <div className="d-sm-flex gap-3 w-100 justify-content-between align-items-start">
         <div className="flex-grow-1 small">
           <div className="d-flex gap-2 align-items-center">
@@ -57,19 +70,40 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
       </div>
       <div className="collapse" ref={collapseRef}>
         {(isEditing || isEditClosing) && 
-          <form className="edit-form mt-3">
+          <form className="edit-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="d-sm-flex gap-3 w-100">
-              <div className="flex-fill">
-                <input type="text" className="form-control" placeholder={`Name: ${person.name}`} />
+              <div className="edit-input">
+                <div className="invalid-feedback d-block">{errors.name?.message}&nbsp;</div>
+                <div className="input-group">
+                  <small className="input-group-text">Name</small>
+                  <input type="text" className="form-control" placeholder={person.name}
+                    {...register("name", {
+                      minLength: { value: 2, message: "Name needs to be at least 2 characters" },
+                      maxLength: { value: 100, message: "Name can be max 100 characters" },
+                    })}
+                  />
+                </div>
               </div>
-              <div className="flex-fill">
-                <input type="email" className="form-control" placeholder={`Email: ${person.email}`} />
+              <div className="edit-input">
+                <div className="invalid-feedback d-block">{errors.email?.message}&nbsp;</div>
+                <div className="input-group">
+                  <small className="input-group-text">Email</small>
+                  <input type="email" className="form-control" placeholder={person.email} 
+                    {...register("email", {
+                      maxLength: { value: 150, message: "Email can be max 150 characters" },
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Invalid email format"
+                      },
+                    })}
+                  />
+                </div>
               </div>
-              <div className="d-flex gap-3 align-items-end">
+              <div className="d-flex gap-2 align-items-end">
                 <button type="button" className="btn btn-secondary" onClick={onToggleEdit}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={!isDirty} onClick={onSave(person)}>
+                <button type="submit" className="btn btn-primary" disabled={!isDirty}>
                   Save Changes
                 </button>
               </div>

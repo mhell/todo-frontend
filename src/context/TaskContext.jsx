@@ -37,7 +37,7 @@ export const TaskProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const createdTask = await taskService.create(taskWithoutFiles, filesArray, token);
-      setTasks((tasks) => [...tasks, createdTask]);
+      setTasks([...tasks, createdTask]);
       setError(null);
     } catch (error) {
       if (error.status === 403) {
