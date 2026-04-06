@@ -18,7 +18,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
   };
 
   const clearAttachments = () => {
-    setValue("attachments", [], { shouldDirty: true });
+    setValue("attachments", [], { shouldDirty: true, shouldValidate: true });
   };
 
   return (
@@ -35,6 +35,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
                 required: "Title is required",
                 minLength: { value: 2, message: "Title needs needs to be at least 2 characters" },
                 maxLength: { value: 100, message: "Title can be max 100 characters" },
+                setValueAs: (value) => value?.trim()
               })}
             />
             <div className="invalid-feedback d-block">{errors.title?.message}</div>
@@ -47,6 +48,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
               {...register("description", {
                 required: "Description is required",
                 maxLength: { value: 500, message: "Description can be max 500 characters" },
+                setValueAs: (value) => value?.trim()
               })}></textarea>
             <div className="invalid-feedback d-block">{errors.description?.message}</div>
           </div>
@@ -88,7 +90,16 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
               Attachments
             </label>
             <div className="input-group mb-3">
-              <input type="file" className="form-control" id="todoAttachments" multiple {...register("attachments")} />
+              <input type="file" className="form-control" id="todoAttachments" multiple {...register("attachments", {
+                  validate: (files) => {
+                    if (files.length > 5) 
+                      return "You can upload up to 5 files only";
+                    if (Array.from(files).some((file) => file.size > 2*1024*1024 || file.size === 0))
+                      return "Each file must be 2MB or smaller and not empty";
+                    return true;
+                  },
+                })}
+              />
               <button className="btn btn-outline-secondary" type="button" onClick={clearAttachments}>
                 <i className="bi bi-x-lg"></i>
               </button>
@@ -100,6 +111,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
                 </li>
               ))}
             </div>
+            <div className="invalid-feedback d-block">{errors.attachments?.message}</div>
           </div>
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             {editTask && (

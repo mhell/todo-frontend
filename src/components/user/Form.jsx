@@ -23,6 +23,7 @@ const Form = ({header, onSave, editPerson}) => {
               required: "Name is required",
               minLength: { value: 2, message: "Name needs to be at least 2 characters" },
               maxLength: { value: 100, message: "Name can be max 100 characters" },
+              setValueAs: (value) => value?.trim()
             })}
           />
           <div className="invalid-feedback d-block">{errors.name?.message}</div>
