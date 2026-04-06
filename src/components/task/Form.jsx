@@ -12,7 +12,7 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
 
   const onSubmit = (data) => {
-    onSave(editTask ? { ...editTask, ...data } : data);
+    onSave(editTask ? { ...editTask, ...data, numberOfAttachments: attachments.length } : data);
     clearAttachments();
     reset();
   };

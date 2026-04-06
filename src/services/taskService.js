@@ -68,12 +68,8 @@ export const taskService = {
 function createFormData(task, files) {
   const form = new FormData();
   form.append("todo", new Blob([JSON.stringify(task)], { type: "application/json" }));
-  if (files.length) {
-    files.forEach((file) => {
-      form.append("files", file);
-    });
-  } else {
-    form.append("clearFiles", "true");
-  }
+  files.forEach((file) => {
+    form.append("files", file);
+  });
   return form;
 }
