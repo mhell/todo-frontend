@@ -9,6 +9,7 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
   const ref = useRef(null); 
   const collapseRef = useRef(null);
   const [isEditClosing, setIsEditClosing] = useState(false);
+  const isCurrentUser = user.email === person.email;
   
   if (!isEditing && !isEditClosing) {
     setIsEditClosing(true);
@@ -45,7 +46,7 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
   }, [person]);
 
   const onSubmit = (data) => {
-    onSave({...person, ...(data.name  ? { name: data.name } : {}), ...(data.email  ? { email: data.email } : {})});
+    onSave({...person, ...data}, isCurrentUser);
   } 
 
   return (
@@ -63,7 +64,7 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
           <button className="btn btn-outline-primary btn-sm" title="Edit" onClick={onToggleEdit}>
             <i className="bi bi-pencil"></i>
           </button>
-          <button className="btn btn-outline-danger btn-sm" title="Delete" disabled={user.email === person.email} onClick={() => onRemove(person)}>
+          <button className="btn btn-outline-danger btn-sm" title="Delete" disabled={isCurrentUser} onClick={() => onRemove(person)}>
             <i className="bi bi-trash"></i>
           </button>
         </div>

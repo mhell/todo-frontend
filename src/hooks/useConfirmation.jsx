@@ -10,11 +10,13 @@ const OPT = {
 
 export function useConfirmation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [options, setOptions] = useState(OPT);
   const callbackRef = useRef(null);
   const modalRef = useRef(null);
 
-  const confirm = (callback) => {
+  const confirm = (callback, opt = null) => {
     callbackRef.current = callback;
+    opt && setOptions(opt);
     setIsOpen(true);
   };
 
@@ -47,15 +49,15 @@ export function useConfirmation() {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{OPT.title}</h5>
+            <h5 className="modal-title">{options.title}</h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={() => close(false)}></button>
           </div>
           <div className="modal-body">
-            <p>{OPT.message}</p>
+            <p>{options.message}</p>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => close(false)}>{OPT.cancelText}</button>
-            <button type="button" className="btn btn-primary" onClick={() => close(true)}>{OPT.confirmText}</button>
+            <button type="button" className="btn btn-secondary" onClick={() => close(false)}>{options.cancelText}</button>
+            {options?.cancelText && <button type="button" className="btn btn-primary" onClick={() => close(true)}>{options.confirmText}</button>}
           </div>
         </div>
       </div>

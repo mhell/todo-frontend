@@ -27,17 +27,13 @@ const Task = () => {
     create(task);
   };
 
-  const handleUpdateTask = (task) => {
-    update(task);
+  const handleUpdateTask = async (task) => {
+    await update(task);
     setEditTask(null);
   };
 
   const handleRemoveTask = (task) => {
-    confirm((ok) => {
-      if (ok) {
-        remove(task.id);
-      }
-    });
+    confirm((ok) => ok && remove(task.id));
   };
 
   const handleToggleSort = () => {

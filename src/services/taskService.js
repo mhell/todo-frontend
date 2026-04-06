@@ -73,7 +73,7 @@ function createFormData(task, files) {
       form.append("files", file);
     });
   } else {
-    form.append("files", null);
+    form.append("clearFiles", "true");
   }
   return form;
 }

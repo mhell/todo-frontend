@@ -7,28 +7,40 @@ import UserList from "./UserList.jsx";
 import UserListItem from "./UserListItem.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
 import { useConfirmation } from "../../hooks/useConfirmation.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const { persons, isLoading, error, create, update, remove } = usePersons();
   const { confirm, confirmModal } = useConfirmation();
+  const { logout } = useAuth();
 
   const handleNewPerson = (person) => {
     create(person);
   }
 
-  const handleUpdatePerson = (person) => {
-    update(person);
-    setEditUser(null);
+  const handleUpdatePerson = async (person, isCurrentUser) => {
+    if (isCurrentUser) {
+      confirm(async (ok) => {
+        if (ok) {
+          await update(person);
+          logout();
+        }
+      }, {
+        title: "Confirm",
+        message: "Are you sure? This will log you out.",
+        confirmText: "Ok",
+        cancelText: "Cancel",
+      });
+    } else {
+      await update(person);
+      setEditUser(null);
+    }
   }
 
   const handleRemovePerson = async (person) => {
-    confirm((ok) => {
-      if (ok) {
-        remove(person.id);
-      }
-    });
+    confirm((ok) => ok && remove(person.id));
   }
 
   return (
