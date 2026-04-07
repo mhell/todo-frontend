@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { personService } from "../services/personService.js";
 import { useAuth } from "./AuthContext.jsx";
 
@@ -9,10 +9,6 @@ export const PersonProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { token, logout } = useAuth();
-
-  useEffect(() => {
-    getAll();
-  }, []);
 
   const getAll = async () => {
     try {
@@ -25,7 +21,7 @@ export const PersonProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +42,7 @@ export const PersonProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +59,7 @@ export const PersonProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +76,11 @@ export const PersonProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      if (error.status === 409) {
+        setError({message: "Cannot delete user with assigned tasks", timestamp: Date.now()});
+        return;
+      }
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }

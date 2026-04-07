@@ -1,7 +1,8 @@
 import "./User.css";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
+import AlertBar from "../common/AlertBar.jsx";
 import Form from "./Form.jsx";
 import UserList from "./UserList.jsx";
 import UserListItem from "./UserListItem.jsx";
@@ -12,9 +13,13 @@ import { useAuth } from "../../context/AuthContext.jsx";
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const { persons, isLoading, error, create, update, remove } = usePersons();
+  const { persons, getAll, isLoading, error, create, update, remove } = usePersons();
   const { confirm, confirmModal } = useConfirmation();
   const { logout } = useAuth();
+
+  useEffect(() => {
+    getAll();
+  }, []);
 
   const handleNewPerson = (person) => {
     create(person);
@@ -47,7 +52,9 @@ const User = () => {
     <div id="user" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
-        <Header title="Users" subtitle="Manage users" onToggleSidebar={() => setIsSidebarOpen(true)} />
+        <Header title="Users" subtitle="Manage users" onToggleSidebar={() => setIsSidebarOpen(true)} >
+          {error && <AlertBar message={error.message} key={error.timestamp} />}
+        </Header>
         <div className="container-lg dashboard-content">
           <div className="row">
             <div className="col-lg-11 col-xl-10 mx-auto">

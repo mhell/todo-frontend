@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
 
-const Header = ({ title, subtitle, onToggleSidebar, actions }) => {
+const Header = ({ title, subtitle, onToggleSidebar, actions, children }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ const Header = ({ title, subtitle, onToggleSidebar, actions }) => {
         </div>
         {actions && <div className="header-actions">{actions}</div>}
       </div>
+      {children}
     </div>
   );
 };

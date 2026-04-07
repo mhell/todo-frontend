@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { taskService } from "../services/taskService.js";
 import { useAuth } from "./AuthContext.jsx";
 
@@ -9,10 +9,6 @@ export const TaskProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { token, logout } = useAuth();
-
-  useEffect(() => {
-    getAll();
-  }, []);
 
   const getAll = async () => {
     try {
@@ -25,7 +21,7 @@ export const TaskProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +40,7 @@ export const TaskProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +59,7 @@ export const TaskProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +76,7 @@ export const TaskProvider = ({ children }) => {
         await logout();
         return;
       }
-      setError(error.message);
+      setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }

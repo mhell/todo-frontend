@@ -1,14 +1,16 @@
 import "./Task.css";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
 import Form from "./Form.jsx";
 import Modal from "../common/Modal.jsx";
+import AlertBar from "../common/AlertBar.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskListItem from "./TaskListItem.jsx";
 import useSessionState from "../../hooks/useSessionState.js";
 import { useConfirmation } from "../../hooks/useConfirmation.jsx";
 import { useTasks } from "../../context/TaskContext.jsx";
+import { usePersons } from "../../context/PersonContext.jsx";
 
 const Task = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,12 +18,18 @@ const Task = () => {
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const { confirm, confirmModal } = useConfirmation();
   const [editTask, setEditTask] = useState(null);
-  const { tasks, isLoading: isLoadingTasks, error: errorTasks, create, update, remove } = useTasks();
+  const { tasks, getAll: getAllTasks, isLoading, error, create, update, remove } = useTasks();
+  const { getAll: getAllPersons } = usePersons();
   const visibleTasks = useMemo(
     () =>
       tasks.filter((task) => (isFiltered ? !task.completed : true)).sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
     [tasks, isSorted, isFiltered]
   );
+
+  useEffect(() => {
+    getAllTasks();
+    getAllPersons();
+  }, []);
 
   const handleNewTask = (task) => {
     create(task);
@@ -52,7 +60,9 @@ const Task = () => {
     <div id="task" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
-        <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)} />
+        <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)} >
+         {error && <AlertBar message={error.message} key={error.timestamp} />}
+        </Header>
         <div className="container-lg dashboard-content">
           <div className="row">
             <div className="col-lg-11 col-xl-10 mx-auto">
