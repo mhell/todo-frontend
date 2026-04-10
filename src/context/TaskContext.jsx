@@ -14,8 +14,8 @@ export const TaskProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const fetchedTasks = await taskService.getAll(token);
-      setTasks(fetchedTasks);
       setError(null);
+      setTasks(fetchedTasks);
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -33,8 +33,8 @@ export const TaskProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const createdTask = await taskService.create(taskWithoutFiles, filesArray, token);
-      setTasks([...tasks, createdTask]);
       setError(null);
+      setTasks([...tasks, createdTask]);
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -52,8 +52,8 @@ export const TaskProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const updatedTask = await taskService.update(taskWithoutFiles, filesArray, token);
-      setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
       setError(null);
+      setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -69,8 +69,8 @@ export const TaskProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await taskService.remove(taskId, token);
-      setTasks(tasks.filter((task) => task.id !== taskId));
       setError(null);
+      setTasks(tasks.filter((task) => task.id !== taskId));
     } catch (error) {
       if (error.status === 403) {
         await logout();

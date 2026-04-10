@@ -53,7 +53,7 @@ const User = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
         <Header title="Users" subtitle="Manage users" onToggleSidebar={() => setIsSidebarOpen(true)} >
-          {isLoading && <div class="loader"></div>}
+          {isLoading && <div className="loader"></div>}
           {error && <AlertBar message={error.message} key={error.timestamp} />}
         </Header>
         <div className="container-lg dashboard-content">

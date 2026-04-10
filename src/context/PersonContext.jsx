@@ -14,8 +14,8 @@ export const PersonProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const fetchedPersons = await personService.getAll(token);
-      setPersons(fetchedPersons);
       setError(null);
+      setPersons(fetchedPersons);
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -35,8 +35,8 @@ export const PersonProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const createdPerson = await personService.create(person, token);
-      setPersons([...persons, createdPerson]);
       setError(null);
+      setPersons([...persons, createdPerson]);
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -52,8 +52,8 @@ export const PersonProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await personService.update(person, token);
-      setPersons(persons.map((p) => (p.id === person.id ? person : p)));
       setError(null);
+      setPersons(persons.map((p) => (p.id === person.id ? person : p)));
     } catch (error) {
       if (error.status === 403) {
         await logout();
@@ -69,8 +69,8 @@ export const PersonProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await personService.remove(personId, token);
-      setPersons(persons.filter((p) => p.id !== personId));
       setError(null);
+      setPersons(persons.filter((p) => p.id !== personId));
     } catch (error) {
       if (error.status === 403) {
         await logout();

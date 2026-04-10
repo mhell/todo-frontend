@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { usePersons } from "../../context/PersonContext.jsx";
 
 const Form = ({header, onSave, editPerson}) => {
-  const { register, reset, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
+  const { register, reset, handleSubmit, getValues, formState: { errors }} = useForm();
+  const { error : saveError } = usePersons();
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isSaving && !saveError)
+      reset();
+  }, [isSaving, saveError]);
 
   const onSubmit = async (data) => {
     setIsSaving(true);
     await onSave(editPerson ? { ...editTask, ...data } : data);
-    reset();
     setIsSaving(false);
   }
 

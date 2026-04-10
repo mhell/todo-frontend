@@ -1,22 +1,29 @@
 import "./Task.css";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useTasks } from "../../context/TaskContext.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
 import { toLocalISOString } from "../../utils/converters.js";
 
 const Form = ({ header, onSave, onCancel, editTask }) => {
   const defaultValues = { ...editTask, ...(editTask?.dueDate ? { dueDate: editTask.dueDate.substring(0, 16) } : {}) };
   const { control, register, reset, setValue, handleSubmit, formState: { errors, isDirty }} = useForm({ defaultValues: defaultValues });
+  const { error: saveError } = useTasks();
   const { persons } = usePersons();
   const attachments = useWatch({ control, name: "attachments", defaultValue: editTask?.attachments || [] });
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
   const [isSaving, setIsSaving] = useState(false);
 
+  useEffect(() => {
+    if (!isSaving && !saveError) {
+      reset();
+      clearAttachments();
+    }
+  }, [isSaving, saveError]);
+
   const onSubmit = async (data) => {
     setIsSaving(true);
     await onSave(editTask ? { ...editTask, ...data, numberOfAttachments: attachments.length } : data);
-    clearAttachments();
-    reset();
     setIsSaving(false);
   };
 

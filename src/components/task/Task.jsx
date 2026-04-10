@@ -61,7 +61,7 @@ const Task = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
         <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)} >
-          {isLoading && <div class="loader"></div>}
+          {isLoading && <div className="loader"></div>}
           {error && <AlertBar message={error.message} key={error.timestamp} />}
         </Header>
         <div className="container-lg dashboard-content">
