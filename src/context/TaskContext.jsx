@@ -17,10 +17,7 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setTasks(fetchedTasks);
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -36,10 +33,7 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setTasks([...tasks, createdTask]);
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -55,10 +49,7 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -72,15 +63,20 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setTasks(tasks.filter((task) => task.id !== taskId));
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
   };
+
+  async function handle403(httpstatus) {
+    if (httpstatus === 403) {
+      await logout();
+      return true;
+    }
+    return false;
+  }
 
   return (
     <TaskContext.Provider value={{ tasks, isLoading, error, getAll, create, update, remove }}>

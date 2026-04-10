@@ -18,6 +18,8 @@ const Edit = ({children, header, isOpen, onCancel}) => {
     modalEl?.addEventListener("hidden.bs.modal", onCancel);
     return () => {
       modalEl?.removeEventListener("hidden.bs.modal", onCancel);
+      // prevent modal-backdrop to linger on logout
+      document.querySelector(".modal-backdrop")?.remove();
     };
   }, []);
 

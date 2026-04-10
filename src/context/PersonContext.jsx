@@ -17,10 +17,7 @@ export const PersonProvider = ({ children }) => {
       setError(null);
       setPersons(fetchedPersons);
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -38,10 +35,7 @@ export const PersonProvider = ({ children }) => {
       setError(null);
       setPersons([...persons, createdPerson]);
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -55,10 +49,7 @@ export const PersonProvider = ({ children }) => {
       setError(null);
       setPersons(persons.map((p) => (p.id === person.id ? person : p)));
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
+      if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
@@ -72,19 +63,28 @@ export const PersonProvider = ({ children }) => {
       setError(null);
       setPersons(persons.filter((p) => p.id !== personId));
     } catch (error) {
-      if (error.status === 403) {
-        await logout();
-        return;
-      }
-      if (error.status === 409) {
-        setError({message: "Cannot delete user with assigned tasks", timestamp: Date.now()});
-        return;
-      }
+      if (await handle403(error.status) || handle409(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
     } finally {
       setIsLoading(false);
     }
   };
+
+  async function handle403(httpstatus) {
+    if (httpstatus === 403) {
+      await logout();
+      return true;
+    }
+    return false;
+  }
+  
+  function handle409(httpstatus) {
+    if (httpstatus === 409) {
+      setError({message: "Cannot delete user with assigned tasks", timestamp: Date.now()});
+      return true;
+    }
+    return false;
+  }
 
   return (
     <PersonContext.Provider value={{ persons, isLoading, error, getAll, getById, create, update, remove }}>
