@@ -1,5 +1,5 @@
 import "./Task.css";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { usePersons } from "../../context/PersonContext.jsx";
 import { toLocalISOString } from "../../utils/converters.js";
@@ -10,11 +10,14 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
   const { persons } = usePersons();
   const attachments = useWatch({ control, name: "attachments", defaultValue: editTask?.attachments || [] });
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const onSubmit = (data) => {
-    onSave(editTask ? { ...editTask, ...data, numberOfAttachments: attachments.length } : data);
+  const onSubmit = async (data) => {
+    setIsSaving(true);
+    await onSave(editTask ? { ...editTask, ...data, numberOfAttachments: attachments.length } : data);
     clearAttachments();
     reset();
+    setIsSaving(false);
   };
 
   const clearAttachments = () => {
@@ -119,8 +122,11 @@ const Form = ({ header, onSave, onCancel, editTask }) => {
                 Cancel
               </button>
             )}
-            <button type="submit" className="btn btn-primary" disabled={!isDirty}>
-              {editTask ? "Save Changes" : <> <i className="bi bi-plus-lg me-2"></i> Add Task  </>}
+            <button type="submit" className="btn btn-primary" disabled={!isDirty || isSaving}>
+              {
+                isSaving ? <>Saving <i className="bi bi-arrow-repeat spin"></i></> :
+                editTask ? "Save Changes" : <> <i className="bi bi-plus-lg me-2"></i> Add Task</>
+              }
             </button>
           </div>
         </form>

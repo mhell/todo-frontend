@@ -31,8 +31,8 @@ const Task = () => {
     getAllPersons();
   }, []);
 
-  const handleNewTask = (task) => {
-    create(task);
+  const handleNewTask = async (task) => {
+    await create(task);
   };
 
   const handleUpdateTask = async (task) => {
@@ -61,7 +61,8 @@ const Task = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
         <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)} >
-         {error && <AlertBar message={error.message} key={error.timestamp} />}
+          {isLoading && <div class="loader"></div>}
+          {error && <AlertBar message={error.message} key={error.timestamp} />}
         </Header>
         <div className="container-lg dashboard-content">
           <div className="row">

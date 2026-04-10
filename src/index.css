@@ -47,6 +47,7 @@ body {
 
 /* Add to index.css */
 .spin {
+    display: inline-block;
     animation: spin 1s linear infinite;
 }
 
@@ -57,4 +58,19 @@ body {
     to {
         transform: rotate(360deg);
     }
+}
+
+.loader {
+  height: 4px;
+  width: 100%;
+  margin-top: -4px;
+  --c:no-repeat linear-gradient(#0d6efd 0 0);
+  background: var(--c),#fff;
+  background-size: 60% 100%;
+  background-position:-150% 0;
+  animation: loader-keys 3s ease-in-out .5s infinite;
+}
+@keyframes loader-keys {
+  0%   {}
+  100% {background-position: 250% 0}
 }

@@ -6,13 +6,25 @@ import { Collapse } from "bootstrap";
 const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
   const { register, reset, handleSubmit, formState: { errors, isDirty }} = useForm({ defaultValues: person });
   const { user } = useAuth();
+  const [isEditClosing, setIsEditClosing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const ref = useRef(null); 
   const collapseRef = useRef(null);
-  const [isEditClosing, setIsEditClosing] = useState(false);
   const isCurrentUser = user.email === person.email;
   
+  const onSubmit = async (data) => {
+    setIsSaving(true);
+    await onSave({...person, ...data}, isCurrentUser);
+    setIsSaving(false);
+  } 
+
   if (!isEditing && !isEditClosing) {
     setIsEditClosing(true);
+  }
+
+  const handleClosed = () => {
+    setIsEditClosing(false);
+    reset();
   }
 
   useEffect(() => {
@@ -22,11 +34,6 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
         //node.style.opacity = 0;
     };
   }, [])
-
-  const handleClosed = () => {
-    setIsEditClosing(false);
-    reset();
-  }
 
   useEffect(() => {
     const collapseEl = collapseRef.current;
@@ -44,10 +51,6 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
   useEffect(() => {
     reset(person);
   }, [person]);
-
-  const onSubmit = (data) => {
-    onSave({...person, ...data}, isCurrentUser);
-  } 
 
   return (
     <div className={`list-group-item ${!isEditing && "list-group-item-action"}`} ref={ref}>
@@ -105,7 +108,7 @@ const UserListItem = ({person, onSave, onRemove, isEditing, onToggleEdit}) => {
                 <button type="button" className="btn btn-secondary" onClick={onToggleEdit}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={!isDirty}>
+                <button type="submit" className="btn btn-primary" disabled={!isDirty || isSaving || !isEditing }>
                   Save Changes
                 </button>
               </div>

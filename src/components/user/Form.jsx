@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Form = ({header, onSave, editPerson}) => {
   const { register, reset, handleSubmit, getValues, formState: { errors, isDirty }} = useForm();
+  const [isSaving, setIsSaving] = useState(false);
 
-  const onSubmit = (data) => {
-    onSave(editPerson ? { ...editTask, ...data } : data);
+  const onSubmit = async (data) => {
+    setIsSaving(true);
+    await onSave(editPerson ? { ...editTask, ...data } : data);
     reset();
+    setIsSaving(false);
   }
 
   return (
@@ -89,8 +92,11 @@ const Form = ({header, onSave, editPerson}) => {
             </div>
           </div>
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit" className="btn btn-primary" disabled={!isDirty}>
-              <i className="bi bi-plus-lg me-2"></i> Add User
+            <button type="submit" className="btn btn-primary" disabled={isSaving}>
+              {
+                isSaving ? <>Saving <i className="bi bi-arrow-repeat spin"></i></> :
+                <><i className="bi bi-plus-lg me-2"></i> Add User </>
+              }
             </button>
           </div>
         </form>

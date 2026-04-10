@@ -21,8 +21,8 @@ const User = () => {
     getAll();
   }, []);
 
-  const handleNewPerson = (person) => {
-    create(person);
+  const handleNewPerson = async (person) => {
+    await create(person);
   }
 
   const handleUpdatePerson = async (person, isCurrentUser) => {
@@ -53,6 +53,7 @@ const User = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
         <Header title="Users" subtitle="Manage users" onToggleSidebar={() => setIsSidebarOpen(true)} >
+          {isLoading && <div class="loader"></div>}
           {error && <AlertBar message={error.message} key={error.timestamp} />}
         </Header>
         <div className="container-lg dashboard-content">
