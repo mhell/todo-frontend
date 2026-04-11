@@ -6,21 +6,24 @@ import TaskTable from "./TaskTable.jsx";
 import TaskTableItem from "./TaskTableItem.jsx";
 import Stats from "./Stats.jsx";
 import { useTasks } from "../../context/TaskContext.jsx";
+import { usePersons } from "../../context/PersonContext.jsx";
 
 const NUM_RECENT = 10;
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { tasks, getOverdue, getUpcoming, isLoading, getStats, error, create, update, remove } = useTasks();
+  const { tasks, getOverdue, getUpcoming, isLoading: isLoadingTasks, error: errorTasks, update, remove } = useTasks();
+  const { loadAll: loadAllPersons, isLoading: isLoadingPersons, error: errorPersons } = usePersons();
   const [recentTasks, setRecentTasks] = useState(null);
   const [overdueTasks, setOverdueTasks] = useState(null);
   
   useEffect(() => {
     async function fetchTasks() {
-      setRecentTasks(await getUpcoming(NUM_RECENT), [tasks]);
-      setOverdueTasks((await getOverdue())?.sort((a, b) => Date.parse(a.dueDate) - Date.parse(b.dueDate), [overdueTasks]));
+      setRecentTasks(await getUpcoming(NUM_RECENT));
+      setOverdueTasks((await getOverdue())?.sort((a, b) => Date.parse(a.dueDate) - Date.parse(b.dueDate)));
     }
     fetchTasks();
+    loadAllPersons();
   }, [tasks]);
 
   return (
@@ -34,7 +37,8 @@ const Dashboard = () => {
             <Stats />
           </div>
           <div className="tasks-grid">
-            <TaskTable title="Recent Tasks" isOverdue={false} >
+            {/* Original title "Recent Tasks" did not match with original logic (using dueDate) */}
+            <TaskTable title="Upcoming Tasks" isOverdue={false} >
               {recentTasks?.map((task, index) => 
                 <TaskTableItem key={task.id} task={task} index={index} />
               )}

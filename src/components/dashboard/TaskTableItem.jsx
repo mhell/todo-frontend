@@ -1,11 +1,10 @@
-import React from 'react';
-import { STATUS } from "../../utils/constants.js";
+import React from "react";
+import getStatus from "../../utils/status.js";
+import { usePersons } from "../../context/PersonContext";
 
-const TaskTableItem = ({task, index}) => {
-  const status = task.completed ? STATUS.completed
-                : !task.dueDate ? STATUS.pending
-                : Date.parse(task.dueDate) < Date.now() ? STATUS.overdue
-                : STATUS.inProgress;  
+const TaskTableItem = ({ task, index }) => {
+  const { getById: getPersonById } = usePersons();
+  const status = getStatus(task);
 
   return (
     <tr key={task.id}>
@@ -13,7 +12,7 @@ const TaskTableItem = ({task, index}) => {
       <td>
         <div className="fw-medium">{task.title}</div>
       </td>
-      <td>{task.team}</td>
+      <td>{getPersonById(task.personId)?.name}</td>
       <td>
         <div className={status === "overdue" ? "text-danger" : ""}>{new Date(task.dueDate).toLocaleDateString()}</div>
       </td>

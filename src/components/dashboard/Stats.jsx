@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useTasks } from "../../context/TaskContext";
+import { usePersons } from "../../context/PersonContext"; 
 
 const Stats = () => {
+  const { tasks, getStats } = useTasks();
+  const { persons } = usePersons();
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      setStats(await getStats());
+    }
+    fetchStats();
+  }, [tasks]);
+
   return (
     <>
       <div className="stat-card">
@@ -9,7 +22,7 @@ const Stats = () => {
         </div>
         <div className="stat-info">
           <h3>Pending</h3>
-          <p className="stat-number">12</p>
+          <p className="stat-number">{stats?.pending}</p>
         </div>
       </div>
 
@@ -19,7 +32,7 @@ const Stats = () => {
         </div>
         <div className="stat-info">
           <h3>In Progress</h3>
-          <p className="stat-number">5</p>
+          <p className="stat-number">{stats?.inProgress}</p>
         </div>
       </div>
 
@@ -29,7 +42,7 @@ const Stats = () => {
         </div>
         <div className="stat-info">
           <h3>Completed</h3>
-          <p className="stat-number">18</p>
+          <p className="stat-number">{stats?.completed}</p>
         </div>
       </div>
 
@@ -39,7 +52,7 @@ const Stats = () => {
         </div>
         <div className="stat-info">
           <h3>Overdue</h3>
-          <p className="stat-number">3</p>
+          <p className="stat-number">{stats?.overdue}</p>
         </div>
       </div>
 
@@ -49,7 +62,7 @@ const Stats = () => {
         </div>
         <div className="stat-info">
           <h3>Users</h3>
-          <p className="stat-number">1</p>
+          <p className="stat-number">{persons?.length}</p>
         </div>
       </div>
     </>

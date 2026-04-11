@@ -16,7 +16,7 @@ const TaskTable = ({ title, isOverdue, numOverdue, children }) => {
           </button>
         </div>
   
-        <div className="table-responsive">
+        <div className="table-responsive overflow-visible">
           <table className="table table-hover align-middle mb-0">
             <thead className="table-light">
               <tr>
@@ -24,7 +24,7 @@ const TaskTable = ({ title, isOverdue, numOverdue, children }) => {
                   #
                 </th>
                 <th scope="col">Task</th>
-                <th scope="col">Team</th>
+                <th scope="col">Assigned To</th>
                 <th scope="col">Due Date</th>
                 <th scope="col" style={{ width: "120px" }}>
                   Status

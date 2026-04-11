@@ -1,24 +1,21 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
-import { STATUS } from "../../utils/constants.js";
+import getStatus from "../../utils/status.js";
 
-const TaskListItem = ({task, onComplete, onEdit, onRemove}) => {
+const TaskListItem = ({ task, onComplete, onEdit, onRemove }) => {
   const { isAdmin } = useAuth();
   const { getById: getPersonById } = usePersons();
-  const ref = useRef(null); 
-  const status = task.completed ? STATUS.completed
-                : !task.dueDate ? STATUS.pending
-                : Date.parse(task.dueDate) < Date.now() ? STATUS.overdue
-                : STATUS.inProgress;
+  const ref = useRef(null);
+  const status = getStatus(task);
 
   useEffect(() => {
     const node = ref.current;
     node.style.opacity = 1;
     return () => {
       //node.style.opacity = 0;
-  };
-  }, [])
+    };
+  }, []);
 
   return (
     <div className="list-group-item list-group-item-action" ref={ref}>
@@ -34,24 +31,24 @@ const TaskListItem = ({task, onComplete, onEdit, onRemove}) => {
               <i className="bi bi-calendar-event"></i> Due: {task.dueDate ? task.dueDate.split("T")[0] : <>n/a</>}
             </small>
             <div className="d-flex gap-2 align-items-center flex-wrap">
-              {task.personId &&
+              {task.personId && (
                 <span className="badge bg-info">
                   <i className="bi bi-person"></i> {getPersonById(task.personId)?.name}
                 </span>
-              }
-              <span className={`badge ${status.class}`}>
-                {status.message}
-              </span>
-              {task.attachments?.length > 0 &&
+              )}
+              <span className={`badge ${status.class}`}>{status.message}</span>
+              {task.attachments?.length > 0 && (
                 <span className={`badge bg-secondary`}>
                   <i className="bi bi-paperclip"></i> {task.attachments.length} attachment{task.attachments.length > 1 && "s"}
                 </span>
-              }
+              )}
             </div>
           </div>
         </div>
         <div className="edit-buttons btn-group mt-3 mt-md-0">
-          <button className={`btn btn-outline-success btn-sm ${task.completed && "text-bg-success"}`} title="Complete" 
+          <button
+            className={`btn btn-outline-success btn-sm ${task.completed && "text-bg-success"}`}
+            title="Complete"
             onClick={() => {
               task.completed = !task.completed;
               onComplete(task);
@@ -61,11 +58,11 @@ const TaskListItem = ({task, onComplete, onEdit, onRemove}) => {
           <button className="btn btn-outline-primary btn-sm" title="Edit" onClick={() => onEdit(task)}>
             <i className="bi bi-pencil"></i>
           </button>
-          {isAdmin() &&
+          {isAdmin() && (
             <button className="btn btn-outline-danger btn-sm" title="Delete" onClick={() => onRemove(task)}>
               <i className="bi bi-trash"></i>
             </button>
-          }
+          )}
         </div>
       </div>
     </div>
