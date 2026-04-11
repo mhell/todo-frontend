@@ -18,8 +18,8 @@ const Task = () => {
   const [isFiltered, setIsFiltered] = useSessionState("isTasksFiltered", false);
   const { confirm, confirmModal } = useConfirmation();
   const [editTask, setEditTask] = useState(null);
-  const { tasks, getAll: getAllTasks, isLoading, error, create, update, remove } = useTasks();
-  const { getAll: getAllPersons } = usePersons();
+  const { tasks, loadAll: loadAllTasks, isLoading, error, create, update, remove } = useTasks();
+  const { loadAll: loadAllPersons } = usePersons();
   const visibleTasks = useMemo(
     () =>
       tasks.filter((task) => (isFiltered ? !task.completed : true)).sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
@@ -27,8 +27,8 @@ const Task = () => {
   );
 
   useEffect(() => {
-    getAllTasks();
-    getAllPersons();
+    loadAllTasks();
+    loadAllPersons();
   }, []);
 
   const handleNewTask = async (task) => {

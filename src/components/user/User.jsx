@@ -13,12 +13,12 @@ import { useAuth } from "../../context/AuthContext.jsx";
 const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
-  const { persons, getAll, isLoading, error, create, update, remove } = usePersons();
+  const { persons, loadAll, isLoading, error, create, update, remove } = usePersons();
   const { confirm, confirmModal } = useConfirmation();
   const { logout } = useAuth();
 
   useEffect(() => {
-    getAll();
+    loadAll();
   }, []);
 
   const handleNewPerson = async (person) => {

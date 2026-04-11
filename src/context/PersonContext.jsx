@@ -10,7 +10,7 @@ export const PersonProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { token, logout } = useAuth();
 
-  const getAll = async () => {
+  const loadAll = async () => {
     try {
       setIsLoading(true);
       const fetchedPersons = await personService.getAll(token);
@@ -87,7 +87,7 @@ export const PersonProvider = ({ children }) => {
   }
 
   return (
-    <PersonContext.Provider value={{ persons, isLoading, error, getAll, getById, create, update, remove }}>
+    <PersonContext.Provider value={{ persons, isLoading, error, loadAll, getById, create, update, remove }}>
       {children}
     </PersonContext.Provider>
   );

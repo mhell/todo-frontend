@@ -10,7 +10,7 @@ export const TaskProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { token, logout } = useAuth();
 
-  const getAll = async () => {
+  const loadAll = async () => {
     try {
       setIsLoading(true);
       const fetchedTasks = await taskService.getAll(token);
@@ -79,7 +79,7 @@ export const TaskProvider = ({ children }) => {
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, isLoading, error, getAll, create, update, remove }}>
+    <TaskContext.Provider value={{ tasks, isLoading, error, loadAll, create, update, remove }}>
       {children}
     </TaskContext.Provider>
   );
