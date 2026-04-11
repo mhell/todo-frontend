@@ -24,6 +24,48 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const getOverdue = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedTasks = await taskService.getOverdue(token);
+      setError(null);
+      return fetchedTasks;
+    } catch (error) {
+      if (await handle403(error.status)) return;
+      setError({message: error.message, timestamp: Date.now()});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getUpcoming = async (limit) => {
+    try {
+      setIsLoading(true);
+      const fetchedTasks = await taskService.getUpcoming(limit, token);
+      setError(null);
+      return fetchedTasks;
+    } catch (error) {
+      if (await handle403(error.status)) return;
+      setError({message: error.message, timestamp: Date.now()});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getStats = async () => {
+    try {
+      setIsLoading(true);
+      const stats = await taskService.getStats(token);
+      setError(null);
+      return stats;
+    } catch (error) {
+      if (await handle403(error.status)) return;
+      setError({message: error.message, timestamp: Date.now()});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const create = async (task) => {
     const { attachments, ...taskWithoutFiles } = task;
     const filesArray = Array.from(attachments);
@@ -79,7 +121,7 @@ export const TaskProvider = ({ children }) => {
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, isLoading, error, loadAll, create, update, remove }}>
+    <TaskContext.Provider value={{ tasks, isLoading, error, loadAll, getOverdue, getUpcoming, getStats, create, update, remove }}>
       {children}
     </TaskContext.Provider>
   );

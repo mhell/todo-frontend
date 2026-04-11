@@ -20,10 +20,9 @@ const Task = () => {
   const [editTask, setEditTask] = useState(null);
   const { tasks, loadAll: loadAllTasks, isLoading, error, create, update, remove } = useTasks();
   const { loadAll: loadAllPersons } = usePersons();
-  const visibleTasks = useMemo(
-    () =>
+  const visibleTasks = useMemo(() =>
       tasks.filter((task) => (isFiltered ? !task.completed : true)).sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
-    [tasks, isSorted, isFiltered]
+      [tasks, isSorted, isFiltered]
   );
 
   useEffect(() => {

@@ -23,7 +23,11 @@ const AppRoutes = () => {
           path="/dashboard"
           element={
             <RoleProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
-              <Dashboard />
+              <TaskProvider>
+                <PersonProvider>
+                  <Dashboard />
+                </PersonProvider>
+              </TaskProvider>
             </RoleProtectedRoute>
           }
         />

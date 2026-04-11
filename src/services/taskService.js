@@ -18,6 +18,54 @@ export const taskService = {
     }
   },
 
+  getOverdue: async (token) => {
+    try {
+      const response = await axios.get(`${API_URL}/overdue`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching overdue tasks");
+      apiError.status = error.response?.status;
+      throw apiError;
+    }
+  },
+
+  getUpcoming: async (limit, token) => {
+    try {
+      const response = await axios.get(`${API_URL}/upcoming`, {
+        params: {
+          limit: limit
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching latest tasks");
+      apiError.status = error.response?.status;
+      throw apiError;
+    }
+  },
+
+  getStats: async (token) => {
+    try {
+      const response = await axios.get(`${API_URL}/stats`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching task stats");
+      apiError.status = error.response?.status;
+      throw apiError;
+    }
+  },
+
   create: async (task, files, token) => {
     const form = createFormData(task, files);
     try {

@@ -1,22 +1,16 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
-
-const STATUSES = {
-  completed: { class: "text-bg-success", message: "completed" },
-  pending: { class: "text-bg-warning", message: "pending" },
-  overdue: { class: "text-bg-danger", message: "overdue" },
-  inProgress: { class: "text-bg-primary", message: "in-progress" },
-};
+import { STATUS } from "../../utils/constants.js";
 
 const TaskListItem = ({task, onComplete, onEdit, onRemove}) => {
   const { isAdmin } = useAuth();
   const { getById: getPersonById } = usePersons();
   const ref = useRef(null); 
-  const status = task.completed ? STATUSES.completed
-                : !task.dueDate ? STATUSES.pending
-                : Date.parse(task.dueDate) < Date.now() ? STATUSES.overdue
-                : STATUSES.inProgress;
+  const status = task.completed ? STATUS.completed
+                : !task.dueDate ? STATUS.pending
+                : Date.parse(task.dueDate) < Date.now() ? STATUS.overdue
+                : STATUS.inProgress;
 
   useEffect(() => {
     const node = ref.current;
