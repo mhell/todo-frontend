@@ -5,6 +5,7 @@ import Header from "../common/Header.jsx";
 import TaskTable from "./TaskTable.jsx";
 import TaskTableItem from "./TaskTableItem.jsx";
 import Stats from "./Stats.jsx";
+import AlertBar from "../common/AlertBar.jsx";
 import { useTasks } from "../../context/TaskContext.jsx";
 import { usePersons } from "../../context/PersonContext.jsx";
 
@@ -30,8 +31,10 @@ const Dashboard = () => {
     <div id="dashboard" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
-        <Header title="Dashboard" subtitle="Welcome back! Here's your tasks overview" onToggleSidebar={() => setIsSidebarOpen(true)} />
-
+        <Header title="Dashboard" subtitle="Welcome back! Here's your tasks overview" onToggleSidebar={() => setIsSidebarOpen(true)} >
+          {(isLoadingTasks || isLoadingPersons) && <div className="loader"></div>}
+          {(errorTasks || errorPersons) && <AlertBar message={errorTasks.message || errorPersons.message} key={errorTasks.timestamp || errorPersons.timestamp} />}
+        </Header>
         <div className="dashboard-content">
           <div className="stats-grid">
             <Stats />

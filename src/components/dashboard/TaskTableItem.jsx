@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import getStatus from "../../utils/status.js";
 import { usePersons } from "../../context/PersonContext";
 
 const TaskTableItem = ({ task, index }) => {
   const { getById: getPersonById } = usePersons();
   const status = getStatus(task);
+  const ref = useRef(null);
+
+   useEffect(() => {
+      const node = ref.current;
+      node.style.opacity = 1;
+      return () => {
+        //node.style.opacity = 0;
+      };
+    }, []);
 
   return (
-    <tr key={task.id}>
+    <tr key={task.id} ref={ref}>
       <td>{index + 1}</td>
       <td>
         <div className="fw-medium">{task.title}</div>
