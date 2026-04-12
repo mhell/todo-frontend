@@ -24,7 +24,7 @@ const TaskTable = ({ title, isOverdue, numOverdue, children }) => {
                   #
                 </th>
                 <th scope="col">Task</th>
-                <th scope="col">Assigned To</th>
+                <th scope="col">Assigneee</th>
                 <th scope="col">Due Date</th>
                 <th scope="col" style={{ width: "120px" }}>
                   Status
