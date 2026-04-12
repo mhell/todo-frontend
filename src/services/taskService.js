@@ -33,9 +33,9 @@ export const taskService = {
     }
   },
 
-  getUpcoming: async (limit, token) => {
+  getRecent: async (limit, token) => {
     try {
-      const response = await axios.get(`${API_URL}/upcoming`, {
+      const response = await axios.get(`${API_URL}/recent`, {
         params: {
           limit: limit
         },
@@ -45,7 +45,7 @@ export const taskService = {
       });
       return response.data;
     } catch (error) {
-      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching latest tasks");
+      const apiError = new Error(error.response?.data?.errors?.[0] || error.message || "Error fetching recent tasks");
       apiError.status = error.response?.status;
       throw apiError;
     }

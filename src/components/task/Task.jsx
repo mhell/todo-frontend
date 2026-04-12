@@ -2,7 +2,7 @@ import "./Task.css";
 import React, { useState, useMemo, useEffect } from "react";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Header from "../common/Header.jsx";
-import Form from "./Form.jsx";
+import TaskForm from "../common/TaskForm.jsx";
 import Modal from "../common/Modal.jsx";
 import AlertBar from "../common/AlertBar.jsx";
 import TaskList from "./TaskList.jsx";
@@ -20,9 +20,10 @@ const Task = () => {
   const [editTask, setEditTask] = useState(null);
   const { tasks, loadAll: loadAllTasks, isLoading, error, create, update, remove } = useTasks();
   const { loadAll: loadAllPersons } = usePersons();
-  const visibleTasks = useMemo(() =>
+  const visibleTasks = useMemo(
+    () =>
       tasks.filter((task) => (isFiltered ? !task.completed : true)).sort((a, b) => (isSorted ? Date.parse(a.dueDate) - Date.parse(b.dueDate) : 0)),
-      [tasks, isSorted, isFiltered]
+    [tasks, isSorted, isFiltered]
   );
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const Task = () => {
     setIsFiltered(!isFiltered);
   };
 
-  const handleCancel = () => {
+  const handleCancelEdit = () => {
     setEditTask(null);
   };
 
@@ -59,25 +60,25 @@ const Task = () => {
     <div id="task" className="dashboard-layout">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <main className="dashboard-main">
-        <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)} >
+        <Header title="Tasks" subtitle="Manage and organize your tasks" onToggleSidebar={() => setIsSidebarOpen(true)}>
           {isLoading && <div className="loader"></div>}
           {error && <AlertBar message={error.message} key={error.timestamp} />}
         </Header>
         <div className="container-lg dashboard-content">
           <div className="row">
             <div className="col-lg-11 col-xl-10 mx-auto">
-              <Form header="Add New Task" onSave={handleNewTask} />
+              <TaskForm header="Add New Task" onSave={handleNewTask} />
               <TaskList onSort={handleToggleSort} onFilter={handleToggleFilter} isSorted={isSorted} isFiltered={isFiltered}>
-                {visibleTasks?.map((task) => 
+                {visibleTasks?.map((task) => (
                   <TaskListItem key={task.id} task={task} onComplete={handleUpdateTask} onEdit={setEditTask} onRemove={handleRemoveTask} />
-                )}
+                ))}
               </TaskList>
             </div>
           </div>
         </div>
       </main>
-      <Modal header="Edit Task" isOpen={!!editTask} onCancel={handleCancel}>
-        {editTask && <Form key={editTask.id} onSave={handleUpdateTask} onCancel={handleCancel} editTask={editTask} />}
+      <Modal header="Edit Task" isOpen={!!editTask} onCancel={handleCancelEdit}>
+        {editTask && <TaskForm key={editTask.id} editTask={editTask} onSave={handleUpdateTask} onCancel={handleCancelEdit} />}
       </Modal>
       {confirmModal}
     </div>

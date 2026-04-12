@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import getStatus from "../../utils/status.js";
 import { usePersons } from "../../context/PersonContext";
 
-const TaskTableItem = ({ task, index }) => {
+const TaskTableItem = ({ task, index, onComplete, onEdit, onRemove }) => {
   const { getById: getPersonById } = usePersons();
   const status = getStatus(task);
   const ref = useRef(null);
@@ -35,16 +35,26 @@ const TaskTableItem = ({ task, index }) => {
           </button>
           <ul className="dropdown-menu dropdown-menu-end">
             <li>
-              <button className="dropdown-item">Edit</button>
+              <button className="dropdown-item" onClick={() => onEdit(task)}>
+                Edit
+              </button>
             </li>
             <li>
-              <button className="dropdown-item">Mark Complete</button>
+              <button className="dropdown-item" 
+              onClick={() => {
+                task.completed = !task.completed;
+                onComplete(task);
+              }}>
+                {!task.completed ? "Mark Completed" : "Mark Uncompleted"}
+              </button>
             </li>
             <li>
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <button className="dropdown-item text-danger">Delete</button>
+              <button className="dropdown-item text-danger" onClick={() => onRemove(task)}>
+                Delete
+              </button>
             </li>
           </ul>
         </div>

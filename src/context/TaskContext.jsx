@@ -24,26 +24,13 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  const getOverdue = async () => {
+  const loadLatestPlusOverdue = async (limit) => {
     try {
       setIsLoading(true);
-      const fetchedTasks = await taskService.getOverdue(token);
+      const overdueTasks = await taskService.getOverdue(token);
+      const recentTasks = await taskService.getRecent(limit, token);
       setError(null);
-      return fetchedTasks;
-    } catch (error) {
-      if (await handle403(error.status)) return;
-      setError({message: error.message, timestamp: Date.now()});
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getUpcoming = async (limit) => {
-    try {
-      setIsLoading(true);
-      const fetchedTasks = await taskService.getUpcoming(limit, token);
-      setError(null);
-      return fetchedTasks;
+      setTasks([...overdueTasks, ...recentTasks]);
     } catch (error) {
       if (await handle403(error.status)) return;
       setError({message: error.message, timestamp: Date.now()});
@@ -121,7 +108,7 @@ export const TaskProvider = ({ children }) => {
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, isLoading, error, loadAll, getOverdue, getUpcoming, getStats, create, update, remove }}>
+    <TaskContext.Provider value={{ tasks, isLoading, error, loadAll, loadLatestPlusOverdue, getStats, create, update, remove }}>
       {children}
     </TaskContext.Provider>
   );
