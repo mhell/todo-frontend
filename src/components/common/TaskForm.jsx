@@ -14,13 +14,9 @@ const TaskForm = ({ header, onSave, onCancel, editTask }) => {
   const attachmentNames = useMemo(() => Array.from(attachments).map((attachment) => attachment.fileName ?? attachment.name), [attachments]);
   const [isSaving, setIsSaving] = useState(false);
 
-  console.log(attachments);
-  
-
   useEffect(() => {
     if (!isSaving && !saveError) {
       reset();
-      clearAttachments();
     }
   }, [isSaving, saveError]);
 
